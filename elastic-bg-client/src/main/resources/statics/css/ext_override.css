@@ -1,0 +1,85 @@
+@CHARSET "UTF-8";
+
+/* body样式 */
+body {
+	overflow: hidden;
+}
+
+/* 表格行高 */
+ .x-grid-row td{
+	 line-height:20px;
+	 vertical-align:center;
+ }
+ 
+ /* 表格统计行样式 */
+.x-grid-row-summary .x-grid-cell-inner {
+    color:blue;
+    font-size:14px;
+    background-color : #FAFAFA;
+}
+
+/* =========Webkit 滚动条开始========== */
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+::-webkit-scrollbar-thumb {
+	background-color: #CCCCCC;
+	height: 50px;
+	outline-offset: -2px;
+	outline: 2px solid white;
+	-webkit-border-radius: 4px;
+	border: 2px solid white;
+}
+::-webkit-scrollbar-thumb:hover {
+	background-color: #999999;
+	height: 50px;
+	-webkit-border-radius: 4px;
+}
+::-webkit-scrollbar-track-piece {
+	background-color: white;
+	-webkit-border-radius: 0;
+}
+/* =========Webkit 滚动条结束========== */
+
+
+/* 树节点的行高度 */
+.x-tree-panel .x-grid-row .x-grid-cell-inner {
+    line-height: 20px;
+}
+
+/* 校正树节点图表和节点文字的相对位置 */
+.x-tree-icon,
+.x-tree-elbow-img,
+.x-tree-checkbox {
+  margin-top: -3px;
+  margin-bottom: -4px; 
+ }
+ 
+ /* 只对webkit有效 */
+@media screen and (-webkit-min-device-pixel-ratio:0){
+	.x-tree-icon,
+	.x-tree-elbow-img,
+	.x-tree-checkbox {
+	  margin-top: 0px;
+	  margin-bottom: -4px;
+	}
+}
+
+/*选中树样式*/
+.x-grid-row-focused .x-grid-td{
+   /*  border-style: dotted; */
+}
+.x-grid-row-before-focused .x-grid-td {
+ /*  border-bottom-style: dashed; */
+  border-bottom-color: #464646;
+  border-bottom-width: 1px;
+}
+.x-grid-body .x-grid-table-focused-first{
+ /*  border-style: dotted; */
+}
+
+/* 树节点光标设置 */
+.x-tree-node-text{
+  cursor:pointer !important;
+}

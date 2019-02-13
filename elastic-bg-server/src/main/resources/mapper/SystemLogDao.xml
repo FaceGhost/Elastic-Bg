@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.faceghost.elasticbg.mapper.SystemLogMapper">
+  <resultMap id="BaseResultMap" type="com.faceghost.elasticbg.base.model.SystemLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="insert_t" jdbcType="TIMESTAMP" property="insertT" />
+    <result column="insert_u" jdbcType="VARCHAR" property="insertU" />
+    <result column="class_name" jdbcType="VARCHAR" property="className" />
+    <result column="method" jdbcType="VARCHAR" property="method" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="ref_id" jdbcType="VARCHAR" property="refId" />
+    <result column="oper" jdbcType="VARCHAR" property="oper" />
+    <result column="ip_1" jdbcType="INTEGER" property="ip1" />
+    <result column="ip_2" jdbcType="INTEGER" property="ip2" />
+    <result column="ps" jdbcType="VARCHAR" property="ps" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, insert_t, insert_u, class_name, `method`, `type`, ref_id, oper, ip_1, ip_2, ps
+  </sql>
+  <!-- auto -->
+
+  <!-- 日志管理-分页显示  -->
+  <select id="getSystemLogPageVo" resultType="com.faceghost.elasticbg.base.vo.SystemLogVo">
+    SELECT
+    t.id,
+    DATE_FORMAT(t.insert_t,'%Y-%m-%d %H:%i') insertTStr,
+    u.name insertU,
+    t.class_name className,
+    t.method,
+    t.type,
+    t.ref_id refId,
+    t.oper,
+    inet_ntoa(t.ip_1) ip1Str,
+    inet_ntoa(t.ip_2) ip2Str,
+    t.ps
+    FROM
+    system_log t
+    left join system_user u on(t.insert_u = u.id)
+    where 1 = 1
+    <if test="searchVo.className != null and searchVo.className != ''  ">
+      and t.class_name like '%${searchVo.className}%'
+    </if>
+    <if test="searchVo.method != null and searchVo.method != ''  ">
+      and t.method like '%${searchVo.method}%'
+    </if>
+    <if test="searchVo.type != null and searchVo.type != ''  ">
+      and t.type like '%${searchVo.type}%'
+    </if>
+    <if test="searchVo.oper != null and searchVo.oper != ''  ">
+      and t.oper like '%${searchVo.oper}%'
+    </if>
+    <if test="searchVo.searchTS != null and searchVo.searchTS != '' ">
+      and DATE_FORMAT(t.insert_t,'%Y%m%d')  &gt;= #{searchVo.searchTS}
+    </if>
+    <if test="searchVo.searchTE != null and searchVo.searchTE != ''">
+      and DATE_FORMAT(t.insert_t,'%Y%m%d')  &lt;= #{searchVo.searchTE}
+    </if>
+    ORDER BY t.insert_t DESC
+
+  </select>
+  <insert id="saveBean" keyColumn="id" keyProperty="id" parameterType="com.faceghost.elasticbg.base.vo.SystemLogVo" useGeneratedKeys="true">
+    insert into system_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="insertT != null">
+        insert_t,
+      </if>
+      <if test="insertU != null">
+        insert_u,
+      </if>
+      <if test="className != null">
+        class_name,
+      </if>
+      <if test="method != null">
+        `method`,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="refId != null">
+        ref_id,
+      </if>
+      <if test="oper != null">
+        oper,
+      </if>
+      <if test="ip1Str != null">
+        ip_1,
+      </if>
+      <if test="ip2Str != null">
+        ip_2,
+      </if>
+      <if test="ps != null">
+        ps,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="insertT != null">
+        #{insertT,jdbcType=TIMESTAMP},
+      </if>
+      <if test="insertU != null">
+        #{insertU,jdbcType=VARCHAR},
+      </if>
+      <if test="className != null">
+        #{className,jdbcType=VARCHAR},
+      </if>
+      <if test="method != null">
+        #{method,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="refId != null">
+        #{refId,jdbcType=VARCHAR},
+      </if>
+      <if test="oper != null">
+        #{oper,jdbcType=VARCHAR},
+      </if>
+      <if test="ip1Str != null">
+        inet_aton(#{ip1Str}),
+      </if>
+      <if test="ip2Str != null">
+        inet_aton(#{ip2Str}),
+      </if>
+      <if test="ps != null">
+        #{ps,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+</mapper>

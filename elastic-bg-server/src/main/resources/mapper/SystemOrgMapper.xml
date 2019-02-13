@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.faceghost.elasticbg.mapper.SystemOrgMapper">
+   <resultMap id="BaseResultMap" type="com.faceghost.elasticbg.base.model.SystemOrg">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="pin_yin" jdbcType="VARCHAR" property="pinYin" />
+    <result column="ps" jdbcType="VARCHAR" property="ps" />
+    <result column="p_id" jdbcType="INTEGER" property="pId" />
+    <result column="insert_t" jdbcType="TIMESTAMP" property="insertT" />
+    <result column="update_t" jdbcType="TIMESTAMP" property="updateT" />
+    <result column="insert_u" jdbcType="VARCHAR" property="insertU" />
+    <result column="update_u" jdbcType="VARCHAR" property="updateU" />
+    <result column="link_man" jdbcType="VARCHAR" property="linkMan" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="fixed_phone" jdbcType="VARCHAR" property="fixedPhone" />
+    <result column="fax" jdbcType="VARCHAR" property="fax" />
+    <result column="is_auto_expand" jdbcType="CHAR" property="isAutoExpand" />
+    <result column="is_leaf" jdbcType="CHAR" property="isLeaf" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, pin_yin, ps, p_id, insert_t, update_t, insert_u, update_u, link_man, address, 
+    fixed_phone, fax, is_auto_expand, is_leaf, icon, status
+  </sql>
+  <!-- auto -->
+
+  <!-- 组织管理树形显示-->
+   <select id="getSystemOrgTreeVoListBean" resultType="com.faceghost.elasticbg.base.vo.ExtjsTreeVo" >
+   	SELECT
+		so.id,
+		so.p_id parentId,
+		so.name text,
+		so.icon,
+		so.is_auto_expand isAutoExpand
+	FROM
+		system_org so
+	WHERE
+		1 = 1
+	ORDER BY
+		so.id DESC,
+		so.insert_t DESC
+  </select>
+
+  <!-- 组织管理分页显示-->
+   <select id="getSystemOrgPageVo" resultType="com.faceghost.elasticbg.base.vo.SystemOrgVo" parameterType="map" >
+    SELECT
+		so.id,
+		so.p_id pId,
+		so.name,
+		porg.name pName,
+		so.link_man linkMan,
+		so.pin_yin pinYin,
+	    DATE_FORMAT(so.insert_t,'%Y-%m-%d %H:%i') insertT,
+		iu.name insertU,
+	    DATE_FORMAT(so.update_t,'%Y-%m-%d %H:%i') updateT,
+		uu.name updateU,
+	    so.address,
+		so.fixed_phone fixedPhone,
+		so.fax ,
+		so.status,
+	    so.is_auto_expand isAutoExpand
+	FROM
+		system_org so
+	left join system_user iu on (so.insert_u = iu.id)
+	left join system_user uu on (uu.insert_u = uu.id)
+	left join system_org porg on (so.p_id = porg.id)
+	where so.id != 1
+    <if test="searchVo.pId != null ">
+	   and so.p_id = #{searchVo.pId}
+    </if>
+	<if test="searchVo.name != null and searchVo.name != ''  ">
+		and so.name like '%${searchVo.name}%'
+	</if>
+	<if test="searchVo.searchTS != null and searchVo.searchTS != '' ">
+		and DATE_FORMAT(so.insert_t,'%Y%m%d')  &gt;= #{searchVo.searchTS}
+	</if>
+	<if test="searchVo.searchTE != null and searchVo.searchTE != ''">
+		and DATE_FORMAT(so.insert_t,'%Y%m%d')  &lt;= #{searchVo.searchTE}
+	</if>
+    <if test="searchVo.status != null ">
+	   and so.status = #{searchVo.status}
+    </if>
+	ORDER BY so.insert_t DESC
+  </select>
+  
+   <!-- 新增或修改-上级组织管理树形显示 -->
+   <select id="getSystemOrgTreeVoForNotLow" resultType="com.faceghost.elasticbg.base.vo.ExtjsTreeVo"  >
+   select * from 
+	(   
+	 select so.id,so.p_id parentId ,so.name text,so.icon ,so.insert_t,so.is_auto_expand isAutoExpand  from
+		system_org so
+		where  1 = 1 and so.p_id = 1  
+			union all
+		select so.id,so.p_id parentId ,so.name text,so.icon ,so.insert_t,so.is_auto_expand isAutoExpand  from
+		system_org so
+		where  1 = 1 and so.id = 1
+	
+	) t  order by t.id desc,t.insert_t desc
+  </select>
+
+	<!--修改组织 获取原数据 -->
+	<select id="getPreExecAddSystemOrgData" resultType="com.faceghost.elasticbg.base.vo.SystemOrgVo" parameterType="map" >
+		SELECT
+			t.id,
+			t.name,
+			t.p_id pId,
+			p.name pName,
+			t.status,
+			t.fixed_phone fixedPhone,
+			t.fax ,
+			t.pin_yin pinYin ,
+			t.address,
+			t.link_man linkMan
+		FROM
+			system_org t
+		LEFT JOIN system_org p on (t.p_id = p.id)
+		WHERE
+			t.id = #{id}
+
+	</select>
+
+</mapper>

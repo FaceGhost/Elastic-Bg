@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.faceghost.elasticbg.mapper.SystemPermissionMapper" >
+    <resultMap id="BaseResultMap" type="com.faceghost.elasticbg.base.model.SystemPermission">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="p_id" jdbcType="INTEGER" property="pId" />
+    <result column="permission" jdbcType="VARCHAR" property="permission" />
+    <result column="insert_t" jdbcType="TIMESTAMP" property="insertT" />
+    <result column="update_t" jdbcType="TIMESTAMP" property="updateT" />
+    <result column="insert_u" jdbcType="VARCHAR" property="insertU" />
+    <result column="update_u" jdbcType="VARCHAR" property="updateU" />
+    <result column="ps" jdbcType="VARCHAR" property="ps" />
+    <result column="position" jdbcType="INTEGER" property="position" />
+    <result column="is_auto_expand" jdbcType="CHAR" property="isAutoExpand" />
+    <result column="is_leaf" jdbcType="CHAR" property="isLeaf" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, type, url, status, p_id, permission, insert_t, update_t, insert_u, update_u, 
+    ps, position, is_auto_expand, is_leaf, icon
+  </sql>
+  <!-- auto -->
+  
+  
+   <!-- 获取用户权限 -->
+   <select id="getSystemUserPermission" resultType="com.faceghost.elasticbg.base.vo.ExtjsTreeVo" parameterType="java.lang.String" >
+
+	 select sp.id,sp.p_id parentId ,sp.name text,sp.url path,sp.is_leaf leaf_ ,sp.icon ,sp.is_auto_expand expanded_  from system_permission sp where sp.id in
+	(
+		select srp.system_permission_id spd  from system_role_permission srp where srp.system_role_id in
+		(
+			select sur.system_role_id from system_user_role  sur where sur.system_user_id =  #{uid,jdbcType=VARCHAR}
+		)
+	) and 1 = 1 and sp.id != 1 and sp.status = 1 order by sp.position desc , sp.id asc
+
+  </select>
+  
+  <!-- 权限配置-分页显示 -->
+  <select id="getSystemPermissionPageVo" resultType="com.faceghost.elasticbg.base.vo.SystemPermissionVo" parameterType="map">
+	SELECT
+		sp.id,
+		sp.name,
+	    psp.name pName,
+		sp.p_id pId,
+		sp.type,
+	  	DATE_FORMAT(sp.insert_t,'%Y-%m-%d %H:%i') insertT,
+	    iu.name insertU,
+	  	DATE_FORMAT(sp.update_t,'%Y-%m-%d %H:%i') updateT,
+		uu.name updateU,
+	    sp.icon,
+	    sp.url,
+	    sp.permission,
+	    sp.status,
+	  	sp.is_auto_expand isAutoExpand
+	FROM
+		system_permission sp
+	LEFT JOIN system_permission psp ON (sp.p_id = psp.id)
+	LEFT JOIN system_user iu on (sp.insert_u = iu.id)
+	LEFT JOIN system_user uu on (sp.update_u = uu.id)
+	WHERE sp.id != 1
+	<if test="searchVo.pId != null ">
+		and sp.p_id = #{searchVo.pId}
+	</if>
+	<if test="searchVo.name != '' and searchVo.name != null">
+		and sp.name like concat(concat('%',#{searchVo.name}),'%')
+	</if>
+	<if test="searchVo.permission != '' and searchVo.permission != null">
+		and sp.permission like concat(concat('%',#{searchVo.permission}),'%')
+	</if>
+	<if test="searchVo.type != '' and searchVo.type !=  null">
+		and sp.type = #{searchVo.type}
+	</if>
+	<if test="searchVo.url != '' and searchVo.url !=  null">
+		and sp.url like concat(concat('%',#{searchVo.url}),'%')
+	</if>
+	<if test="searchVo.searchTS != '' and searchVo.searchTS != null">
+		and DATE_FORMAT(sp.insert_t,'%Y%m%d')  &gt;= #{searchVo.searchTS}
+	</if>
+	<if test="searchVo.searchTE != '' and searchVo.searchTE !=  null">
+		and DATE_FORMAT(sp.insert_t,'%Y%m%d')  &lt;= #{searchVo.searchTE}
+	</if>
+	order by sp.insert_t desc
+  </select>
+  
+  
+   <!-- 权限配置-分页显示搜索; 新增，添加，上层权限 树形显示-->
+   <select id="getSystemPermissionTreeVoForNotLow" resultType="com.faceghost.elasticbg.base.vo.ExtjsTreeVo" >
+	   SELECT
+		sp.id,
+		sp.p_id parentId,
+		sp.NAME text,
+		sp.insert_t,
+		sp.is_auto_expand  isAutoExpand
+	FROM
+		system_permission sp
+	WHERE
+		1 = 1
+	AND sp.type IN ('0', '1', '2', '3')
+	ORDER BY
+		sp.id DESC,
+		sp.insert_t DESC
+  </select>
+
+  <!-- 修改权限 获取原数据 -->
+  <select id="preExecAddSystemOrg" resultType="com.faceghost.elasticbg.base.vo.SystemPermissionVo">
+	  SELECT
+			t.id,
+			t.name,
+			t.p_id pId,
+			p.name pName,
+			t.status,
+			t.url,
+			t.permission,
+			t.ps,
+			t.icon,
+			t.position,
+			t.is_auto_expand isAutoExpand
+		FROM
+			system_permission t
+		LEFT JOIN system_permission p on (t.p_id = p.id)
+		WHERE
+			t.id = #{id}
+  </select>
+  <!--获取角色下的所属权限 -->
+  <select id="findPermissionBySystemRoleIds" resultType="com.faceghost.elasticbg.base.vo.SystemPermissionVo">
+	SELECT
+		t.id,
+		t.permission
+	FROM
+		system_permission t
+	JOIN system_role_permission sp
+	WHERE
+		t.id = sp.system_permission_id
+	AND sp.system_role_id IN
+	  <foreach collection ="rids" item="id" index= "index" separator =",">
+		  (#{id})
+	  </foreach>
+  </select>
+  <!-- 根据pId查询 -->
+  <select id="getBeanVoByPid" resultType="com.faceghost.elasticbg.base.vo.SystemPermissionVo">
+	SELECT
+	t.id,
+	t.permission
+	FROM
+	system_permission t
+	WHERE t.status = '1'
+	AND t.p_id = #{pId}
+  </select>
+
+</mapper>

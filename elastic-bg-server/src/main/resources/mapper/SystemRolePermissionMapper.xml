@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.faceghost.elasticbg.mapper.SystemRolePermissionMapper" >
+  <resultMap id="BaseResultMap" type="com.faceghost.elasticbg.base.model.SystemRolePermission" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="system_role_id" property="systemRoleId" jdbcType="INTEGER" />
+    <result column="system_permission_id" property="systemPermissionId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, system_role_id, system_permission_id
+  </sql>
+  <!-- auto -->
+  
+  <!-- 删除某一角色的全部权限 -->
+  <delete id="deleteSystemRolePerm" parameterType="java.lang.Integer" >
+    delete from system_role_permission
+    where system_role_id = #{roleId,jdbcType=INTEGER}
+  </delete>
+
+</mapper>

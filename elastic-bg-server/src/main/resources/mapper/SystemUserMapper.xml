@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.faceghost.elasticbg.mapper.SystemUserMapper">
+   <resultMap id="BaseResultMap" type="com.faceghost.elasticbg.base.model.SystemUser">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="init_password" jdbcType="VARCHAR" property="initPassword" />
+    <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="system_org_id" jdbcType="INTEGER" property="systemOrgId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="insert_t" jdbcType="TIMESTAMP" property="insertT" />
+    <result column="update_t" jdbcType="TIMESTAMP" property="updateT" />
+    <result column="insert_u" jdbcType="VARCHAR" property="insertU" />
+    <result column="update_u" jdbcType="VARCHAR" property="updateU" />
+    <result column="tel_phone" jdbcType="VARCHAR" property="telPhone" />
+    <result column="fixed_phone" jdbcType="VARCHAR" property="fixedPhone" />
+    <result column="real_name" jdbcType="VARCHAR" property="realName" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="qq" jdbcType="INTEGER" property="qq" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="ps" jdbcType="VARCHAR" property="ps" />
+    <result column="last_retry_time" jdbcType="TIMESTAMP" property="lastRetryTime" />
+    <result column="retry_number" jdbcType="INTEGER" property="retryNumber" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, password, init_password, salt, system_org_id, status, insert_t, update_t, 
+    insert_u, update_u, tel_phone, fixed_phone, real_name, email, qq, address, ps, last_retry_time, 
+    retry_number
+  </sql>
+  <!-- auto -->
+  
+  <!-- 根据name获取bean -->
+  <select id="getSystemUserByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from system_user
+    where name = #{name}
+  </select>
+  
+  <!-- 登录成功或失败更新 -->
+  <update id="updateByLogin" parameterType="map" >
+    update system_user set status=#{status} , retry_number=#{retryNumber},last_retry_time=#{lastRetryTime} where name = #{name}
+  </update>
+  
+   <!-- 用户管理-分页显示 -->
+  <select id="getSystemUserPageVo" resultType="com.faceghost.elasticbg.base.vo.SystemUserVo">
+	SELECT
+		sp.id,
+		sp.name,
+		sp.init_password initPassword,
+		sp.real_name realName,
+		sp.tel_phone telPhone,
+		sp.fixed_phone fixedPhone,
+		sp.email,
+		sp.qq,
+		sp.address,
+	    DATE_FORMAT(sp.insert_t,'%Y-%m-%d %H:%i') insertT,
+	    iu.name insertU,
+	    DATE_FORMAT(sp.update_t,'%Y-%m-%d %H:%i') updateT,
+		uu.name updateU,
+	    sp.status,
+	    sp.system_org_id orgId,
+		case so.name
+			when '总部' then so.name
+			else concat(ifnull(pso.name,''),'->',so.name)
+		end orgName
+	FROM
+		system_user sp
+	LEFT JOIN system_user iu on (sp.insert_u = iu.id)
+	LEFT JOIN system_user uu on (sp.update_u = uu.id)
+	LEFT JOIN system_org so on (sp.system_org_id = so.id)
+	LEFT JOIN system_org pso on (so.p_id = pso.id)
+	WHERE
+	     1 = 1
+		<if test="searchVo.orgId != null ">
+			and sp.system_org_id = #{searchVo.orgId}
+		</if>
+		<if test="searchVo.realName != '' and searchVo.realName != null">
+			and sp.real_name like concat(concat('%',#{searchVo.realName}),'%')
+		</if>
+		<if test="searchVo.name != '' and searchVo.name != null">
+			and sp.name like concat(concat('%',#{searchVo.name}),'%')
+		</if>
+		<if test="searchVo.status != null">
+			and sp.status = #{searchVo.status}
+		</if>
+		<if test="searchVo.searchTS != '' and searchVo.searchTS != null">
+			and DATE_FORMAT(sp.insert_t,'%Y%m%d')  &gt;= #{searchVo.searchTS}
+		</if>
+		<if test="searchVo.searchTE != '' and searchVo.searchTE !=  null">
+			and DATE_FORMAT(sp.insert_t,'%Y%m%d')  &lt;= #{searchVo.searchTE}
+		</if>
+	order by sp.insert_t desc
+  </select>
+  
+   <!--用户管理-获取角色-->
+   <select id="getSystemUserRole" resultType="com.faceghost.elasticbg.base.vo.ExtjsCheckTreeVo" parameterType="map" >
+    SELECT
+		sp.id,
+		sp.name text,
+		sp.insert_t,
+	 	(select count(*) from system_user_role tmp where tmp.system_user_id = #{uid} and tmp.system_role_id = sp.id)  checked_
+		FROM
+			system_role sp,system_org org
+	WHERE
+		sp.system_org_id = org.id
+	AND
+		sp.system_org_id = #{orgId}
+	AND 
+		sp.id != 1 
+	AND
+		 sp.status = 1
+	ORDER BY
+		sp.id DESC,
+		sp.insert_t DESC
+  </select>
+
+	<!--用户管理-新修改用户 获取原数据 -->
+  <select id="preExecOperSystemUser" resultType="com.faceghost.elasticbg.base.vo.SystemUserVo" parameterType="map" >
+  	SELECT
+		  sp.id, 
+		  sp.name, 
+		  sp.init_password initPassword, 
+		  sp.system_org_id orgId, 
+		  sp.status, 
+    	  sp.tel_phone telPhone, 
+    	  sp.fixed_phone fixedPhone, 
+    	  sp.real_name realName, 
+    	  sp.email, 
+    	  sp.qq, 
+    	  sp.address,
+          org.name orgName,
+          (select group_concat(role.id separator ',')  from system_user_role tmp,system_role role where tmp.system_role_id = role.id and  tmp.system_user_id = sp.id) roleIds,
+          (select group_concat(role.name separator ',')   from system_user_role tmp,system_role role where tmp.system_role_id = role.id and  tmp.system_user_id = sp.id) roleNames
+		FROM
+			system_user sp,system_org org
+	WHERE
+	    sp.system_org_id = org.id
+    AND
+		sp.id = #{uid}
+
+  </select>
+  
+</mapper>

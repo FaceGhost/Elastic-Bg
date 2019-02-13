@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.faceghost.elasticbg.mapper.SystemRoleMapper" >
+ <resultMap id="BaseResultMap" type="com.faceghost.elasticbg.base.model.SystemRole">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="insert_t" jdbcType="TIMESTAMP" property="insertT" />
+    <result column="update_t" jdbcType="TIMESTAMP" property="updateT" />
+    <result column="insert_u" jdbcType="VARCHAR" property="insertU" />
+    <result column="update_u" jdbcType="VARCHAR" property="updateU" />
+    <result column="system_org_id" jdbcType="INTEGER" property="systemOrgId" />
+    <result column="ps" jdbcType="VARCHAR" property="ps" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, status, insert_t, update_t, insert_u, update_u, system_org_id, ps
+  </sql>
+  <!-- auto -->
+
+   <!-- 角色管理-分页显示 -->
+  <select id="getSystemRolePageVo" resultType="com.faceghost.elasticbg.base.vo.SystemRoleVo">
+	SELECT
+		sp.id,
+		sp.name,
+	    DATE_FORMAT(sp.insert_t,'%Y-%m-%d %H:%i') insertT,
+	    iu.name insertU,
+	    DATE_FORMAT(sp.update_t,'%Y-%m-%d %H:%i') updateT,
+		uu.name updateU,
+	    sp.status,
+	    sp.system_org_id orgId,
+	    so.name orgName,
+	    pso.name pOrgName
+	FROM
+		system_role sp
+	LEFT JOIN system_user iu on (sp.insert_u = iu.id)
+	LEFT JOIN system_user uu on (sp.update_u = uu.id)
+	LEFT JOIN system_org so on (sp.system_org_id = so.id)
+	LEFT JOIN system_org pso on (pso.id = so.p_id)
+	WHERE sp.id != 1
+		<if test="searchVo.orgId != null ">
+			and sp.system_org_id = #{searchVo.orgId}
+		</if>
+		<if test="searchVo.name != '' and searchVo.name != null">
+			and sp.name like concat(concat('%',#{searchVo.name}),'%')
+		</if>
+		<if test="searchVo.status != null">
+			and sp.status = #{searchVo.status}
+		</if>
+		<if test="searchVo.searchTS != '' and searchVo.searchTS != null">
+			and DATE_FORMAT(sp.insert_t,'%Y%m%d')  &gt;= #{searchVo.searchTS}
+		</if>
+		<if test="searchVo.searchTE != '' and searchVo.searchTE !=  null">
+			and DATE_FORMAT(sp.insert_t,'%Y%m%d')  &lt;= #{searchVo.searchTE}
+		</if>
+	order by sp.insert_t desc
+  </select>
+   
+   <!--  角色管理-权限配置 -->
+   <select id="systemRolePermOperPre" resultType="com.faceghost.elasticbg.base.vo.ExtjsCheckTreeVo" parameterType="map" >
+	   SELECT
+		sp.id,
+		sp.p_id parentId,
+		sp.NAME text,
+		sp.icon,
+		sp.insert_t,
+		sp.is_auto_expand isAutoExpand,
+		(select count(*) from system_role_permission srp where srp.system_role_id = #{roleId} and srp.system_permission_id = sp.id)  checked_
+	FROM
+		system_permission sp
+	WHERE
+		1 = 1
+	AND sp.id != 1 
+	AND sp.status = 1
+	ORDER BY
+		sp.id DESC,
+		sp.insert_t DESC
+  </select>
+	<!--  修改角色 获取原数据 -->
+  <select id="preExecAddSystemRole" resultType="com.faceghost.elasticbg.base.vo.SystemRoleVo">
+	  SELECT
+			t.id,
+			t.name,
+			t.status,
+			t.ps,
+			p.id orgId,
+			p.name orgName
+		FROM
+			system_role t
+		LEFT JOIN system_org p on (t.system_org_id = p.id)
+		WHERE
+			t.id = #{id}
+  </select>
+
+  <!-- 角色管理-获取某一用户下的所属角色  -->
+  <select id="findRolesBySystemUserId" resultType="com.faceghost.elasticbg.base.vo.SystemRoleVo">
+	SELECT
+		sr.id,
+		sr.name
+	FROM
+		system_user_role  t
+	JOIN system_role sr on (t.system_role_id = sr.id)
+	WHERE
+		t.system_user_id = #{userId}
+  </select>
+
+
+</mapper>

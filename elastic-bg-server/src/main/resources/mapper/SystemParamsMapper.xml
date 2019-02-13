@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.faceghost.elasticbg.mapper.SystemParamsMapper">
+  <resultMap id="BaseResultMap" type="com.faceghost.elasticbg.base.model.SystemParams">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="insert_t" jdbcType="TIMESTAMP" property="insertT" />
+    <result column="insert_u" jdbcType="VARCHAR" property="insertU" />
+    <result column="update_t" jdbcType="TIMESTAMP" property="updateT" />
+    <result column="update_u" jdbcType="VARCHAR" property="updateU" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="param" jdbcType="VARCHAR" property="param" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="ps" jdbcType="VARCHAR" property="ps" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, insert_t, insert_u, update_t, update_u, type, param, value, status, ps
+  </sql>
+  <!-- auto -->
+
+  <!-- 查询某一类型的最大值 -->
+  <select id="getMaxKeyByType" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select value from system_params where type='sequence' and  param = #{type}
+  </select>
+
+  <!-- 自动新增某一类型的值 -->
+  <update id="autoIncKeyByType" parameterType="java.lang.String" >
+    update system_params  set value = cast(value as SIGNED INTEGER) + 1 where type='sequence' and  param = #{type}
+  </update>
+
+  <!-- 系统参数管理-分页显示-->
+  <select id="getSystemParamsPageVo" resultType="com.faceghost.elasticbg.base.vo.SystemParamsVo" parameterType="map" >
+    SELECT
+    t.id,
+    t.type,
+    t.param,
+    t.value,
+    t.status,
+    t.ps,
+    DATE_FORMAT(t.insert_t,'%Y-%m-%d %H:%i') insertT,
+    iu.name insertU,
+    DATE_FORMAT(t.update_t,'%Y-%m-%d %H:%i') updateT,
+    uu.name updateU
+    FROM
+    system_params t
+    left join system_user iu on (t.insert_u = iu.id)
+    left join system_user uu on (t.update_u = uu.id)
+    where 1 = 1
+    <if test="searchVo.param != null and searchVo.param != ''  ">
+      and t.param like '%${searchVo.param}%'
+    </if>
+    <if test="searchVo.searchTS != null and searchVo.searchTS != '' ">
+      and DATE_FORMAT(t.insert_t,'%Y%m%d')  &gt;= #{searchVo.searchTS}
+    </if>
+    <if test="searchVo.searchTE != null and searchVo.searchTE != ''">
+      and DATE_FORMAT(t.insert_t,'%Y%m%d')  &lt;= #{searchVo.searchTE}
+    </if>
+    <if test="searchVo.status != null ">
+      and t.status = #{searchVo.status}
+    </if>
+    ORDER BY t.insert_t DESC
+  </select>
+  <!-- 系统参数管理-修改获取原数据 -->
+  <select id="preExecAddSystemParams" resultType="com.faceghost.elasticbg.base.vo.SystemParamsVo" parameterType="map" >
+    SELECT
+    t.id,
+    t.type,
+    t.param,
+    t.value,
+    t.status,
+    t.ps
+    FROM
+    system_params t
+    WHERE
+    t.id = #{id}
+
+  </select>
+
+</mapper>

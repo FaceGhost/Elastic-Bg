@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.faceghost.elasticbg.mapper.SystemUserRoleMapper" >
+    <resultMap id="BaseResultMap" type="com.faceghost.elasticbg.base.model.SystemUserRole" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="system_user_id" property="systemUserId" jdbcType="VARCHAR" />
+    <result column="system_role_id" property="systemRoleId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, system_user_id, system_role_id
+  </sql>
+  <!-- auto -->
+  
+  <!-- 删除用户的全部角色 -->
+  <delete id="deleteSystemUserRole" parameterType="java.lang.String" >
+    delete from system_user_role  where system_user_id = #{uid}
+  </delete>
+
+</mapper>
