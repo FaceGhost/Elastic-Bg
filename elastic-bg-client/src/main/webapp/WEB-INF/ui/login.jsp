@@ -1,9 +1,9 @@
-<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page language="java" pageEncoding="UTF-8"%>
 <%@ include file="./includes/meta.jsp" %>
 <!DOCTYPE HTML >
 <html>
   <head>
-    <title>Elastic-Bg通用后台管理系统</title>
+    <title>Elastic-Bg&nbsp;通用后台管理系统</title>
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
@@ -23,10 +23,8 @@
 	  .login_wrapper .login_form .login_body .bot{border-radius: 0 0 5px 5px;border-top: 0;}
 	  .login_wrapper .login_form .login_body .submit_btn{margin-top: 25px;padding: 8px 0px;width: 100%;display: inline-block;cursor: pointer;color: #fff; background-color: #6699CC; border-radius: 4px;border: 1px solid transparent;}
 	  .login_wrapper .login_form .login_bot{padding-bottom: 10px;margin: 30px auto 2px;text-align: center;font-size: 12px;}
+	  .login_wrapper .login_form .login_bot a{color:#333;}
     </style>
-	<link rel="stylesheet" type="text/css" href="${basepath}statics/js/extjs/resources/css/ext-all.css" />
-	<script type="text/javascript" charset="UTF-8" src="${basepath}statics/js/extjs/ext-all.js" ></script>
-	<script type="text/javascript" charset="UTF-8" src="${basepath}statics/js/extjs/locale/ext-lang-zh_CN.js"></script>
 	<script type="text/javascript" src="${basepath}statics/js/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="${basepath}statics/js/jquery.placeholder.js"></script>
 	<script type="text/javascript">
@@ -39,41 +37,47 @@
         /**
 		 * 登录
 		 */
-        function execLogin(){
+        function execLogin(bol){
             /**
-             * IE支持需要placeholder,直接用$.ajax,不再使用ExtJS Ajax
+             * IE支持需要placeholder,直接用$.ajax
              */
 			var username = $('input[name="username"]').val();
 			var password = $('input[name="password"]').val();
 			var ing  =   $('input[name="submit_btn"]').attr('ing');
-			if($.trim(username) == '' || $.trim(password) == ''){
-				Ext.Msg.alert('提示', '请输入账户名和密码！');
-				return;
-			}
 			if(ing == 'false'){
-				$('input[name="submit_btn"]').attr('ing','true');
-				$('input[name="submit_btn"]').val('登录中');
-				$.ajax({
-					type:'POST',
-					url: base + 'login',
-					data:{
-						'username': username ,
-						'password': password
-					},
-					cache:false,
-					success:function(data){
-						$('input[name="submit_btn"]').attr('ing','false');
-						if(data == null){
-							Ext.Msg.alert('提示', '系统繁忙，请稍后重试！');
-						}
-						if(data != null && data.success){
-							window.location = base + 'main';
-						}else{
-							Ext.Msg.alert('提示', data.msg);
-						}
-                        $('input[name="submit_btn"]').val('确定');
-					}
-				});
+                if($.trim(username) == '' || $.trim(password) == ''){
+                    $('input[name="submit_btn"]').val('请输入账户名和密码');
+                    return;
+                }else{
+                    $('input[name="submit_btn"]').val('确定');
+				}
+				if(bol){
+                    $('input[name="submit_btn"]').attr('ing','true');
+                    $('input[name="submit_btn"]').val('登录中');
+                    $.ajax({
+                        type:'POST',
+                        url: base + 'login',
+                        data:{
+                            'username': username ,
+                            'password': password
+                        },
+                        cache:false,
+                        success:function(data){
+                            $('input[name="submit_btn"]').attr('ing','false');
+                            if(data == null){
+                                $('input[name="submit_btn"]').val('系统繁忙，请稍后重试！');
+                            }
+                            if(data != null && data.success){
+                                window.location = base + 'main';
+                            }else{
+                                $('input[name="submit_btn"]').val(data.msg);
+                            }
+                            setTimeout(function(){
+                                $('input[name="submit_btn"]').val('确定');
+							},1000)
+                        }
+                    });
+				}
 			}
 
 		}
@@ -82,16 +86,18 @@
          */
         $(document).keydown(function(event){
             if(event.keyCode == "13"){
-                execLogin();
+                execLogin(true);
 
             }
         });
 
         $(function(){
             $('input, textarea').placeholder({customClass:'placeholderCls'});
-            $('.submit_btn').click(function(){
-           	 	execLogin();
-            });
+
+            $('input[name="username"]').on('input',function(){execLogin(false)});
+            $('input[name="password"]').on('input',function(){execLogin(false)});
+            $('.submit_btn').click(function(){execLogin(true)});
+
 		});
 	</script>
   </head>
@@ -107,15 +113,15 @@
 			  </div>
 			  <div class="login_body">
 				  <div  class="login_input_div">
-					  <input  placeholder="请输入账户名" value="super_admin" name="username" type="text" class="login_input top username" />
+					  <input  placeholder="请输入账户名" value="" name="username" type="text" class="login_input top username" />
 				  </div>
 				  <div  class="login_input_div">
-					  <input  placeholder="请输入密码" value="bg2019" name="password" type="password"  class="login_input bot password" />
+					  <input  placeholder="请输入密码" value="" name="password" type="password"  class="login_input bot password" />
 				  </div>
 				  <input ing="false" type="button" name="submit_btn"  class="login_input submit_btn"  value="确定"/>
 			  </div>
 			  <div class="login_bot">
-				  演示系统&nbsp;FaceGhost&nbsp;提供，技术服务请关注公众号：见鬼网
+				  演示系统&nbsp;<a target="_blank" href="https://faceghost.com">见鬼网</a>&nbsp;提供，技术服务请关注公众号：见鬼网
 			  </div>
 		  </form>
 	  </div>

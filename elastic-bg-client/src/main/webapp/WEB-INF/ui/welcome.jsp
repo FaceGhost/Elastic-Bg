@@ -18,7 +18,7 @@
 PS:演示系统为只读模式，同一账号最对允许20人同时访问（按照FIFO策略提出）
 </p>
 <p class="line">
-GitHub:<a target="_blank" href="https://github.com/faceghost/elastic-bg">Elastic-Bg</a>
+GitHub：<a target="_blank" href="https://github.com/faceghost/elastic-bg">https://github.com/faceghost/elastic-bg</a>
 </p>
 <p class="line">
     <h3>作者</h3>
@@ -56,7 +56,7 @@ GitHub:<a target="_blank" href="https://github.com/faceghost/elastic-bg">Elastic
 <div class="his">
     <div class="item">
         <h3>赞助</h3>
-        <img src="${basepaht}statics/image/pay.jpg" width="500" height="300">
+        <img src="${basepaht}statics/image/pay.jpg" width="250" height="134">
     </div>
 </div>
 </body>
