@@ -22,7 +22,3 @@
 - Grpc
 - Extjs 4.2
 - Mysql 5.7
-
-### 赞助
-
-![image](https://github.com/FaceGhost/Elastic-Bg/blob/master/elastic-bg-client/src/main/resources/statics/image/pay.jpg)
