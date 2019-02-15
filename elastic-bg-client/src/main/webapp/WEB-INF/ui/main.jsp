@@ -2,6 +2,7 @@
 <%@ include file="./includes/meta.jsp" %>
 <%@ page import="com.faceghost.elasticbg.base.statics.BaseSysConst" %>
 <%@ page import="com.faceghost.elasticbg.base.shiro.ShiroUser" %>
+<%@ page import="com.faceghost.elasticbg.statics.JsCssVersionConst" %>
 <%--加载该页面时，执行doGetAuthenticationInfo进行加载权限认证信息 --%>
 <shiro:hasPermission name="load:doGetAuthorizationInfo"/>
 <!DOCTYPE html >
@@ -14,7 +15,7 @@
 	    #loading{height:auto;position:absolute;left:45%;top:40%;padding:2px;z-index:20001;}
 	    #loading .loading-indicator{ background:white;color:#444;font:bold 13px Helvetica, Arial, sans-serif;height:auto;margin:0;padding:10px;}
 	    #loading-msg {font-size: 10px;font-weight: normal;}
-		.layout_top_div {height: 60px; background-image: url(statics/image/blue.png);}
+		.layout_top_div {height: 60px; background-image: url(static/image/blue.png);}
 		.layout_top_div_left {float: left;}
 		.layout_top_div_left #layout_logo_txt{color: #6699CC; width: 300px;font-size: 20px;position: absolute;top: 13px;text-indent: 10px;}
 		.layout_top_div_right {float: right;padding-right: 5px;padding-top: 5px;position: absolute;right: 0px;top: 0px;}
@@ -30,7 +31,7 @@
 	 	 <div id="loading-mask" style=""></div>
 		 <div id="loading">
 	        <div class="loading-indicator">
-	            <img src="statics/image/extanim32.gif" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>Elastic-Bg综合管理系统
+	            <img src="${basepath}static/image/extanim32.gif" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>Elastic-Bg综合管理系统
 	            <br /><span id="loading-msg">Loading styles and images...</span>
 	        </div>
 	     </div>
@@ -63,25 +64,25 @@
 	</body>
     <base href="${basepath}">
     <script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading UI样式 ...';</script>
-	<link rel="stylesheet" type="text/css" href="${basepath}statics/js/extjs/resources/css/ext-all.css" />
-	<link rel="stylesheet" type="text/css" href="${basepath}statics/css/awesome/css/font-awesome.min.css" />
-	<link rel="stylesheet" type="text/css" href="${basepath}statics/css/ext_override.css" />
+	<link rel="stylesheet" type="text/css" href="${basepath}static/js/extjs/resources/css/ext-all.css" />
+	<link rel="stylesheet" type="text/css" href="${basepath}static/css/awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="${basepath}static/css/ext_override.css" />
 	<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading UI组件 ...';</script>
-	<script type="text/javascript" src="${basepath}statics/js/extjs/ext-all.js" ></script>
-	<script type="text/javascript" src="${basepath}statics/js/extjs/ux/TabCloseMenu.js"></script>
-	<script type="text/javascript" src="${basepath}statics/js/extjs/locale/ext-lang-zh_CN.js"></script>
+	<script type="text/javascript" src="${basepath}static/js/extjs/ext-all.js" ></script>
+	<script type="text/javascript" src="${basepath}static/js/extjs/ux/TabCloseMenu.js"></script>
+	<script type="text/javascript" src="${basepath}static/js/extjs/locale/ext-lang-zh_CN.js"></script>
    	<script type="text/javascript">
 		Ext.Loader.setConfig({
 			enabled: true,
 			paths: {
-				'Ext.ux': '${basepath}statics/js/extjs/ux'
+				'Ext.ux': '${basepath}static/js/extjs/ux'
 			}
 		});
 		var base = ${basepath};
 	</script>
 	<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading 初始化 ...';</script>
-    <script type="text/javascript" src="statics/uijs/viewport.js?t=<%=new Date()%>"></script>
-    <script type="text/javascript" src="${basepath}statics/uijs/changePwd.js?t=<%=new Date()%>"></script>
-    <script type="text/javascript" src="${basepath}statics/uijs/userInfoSetting.js?t=<%=new Date()%>"></script>
+    <script type="text/javascript" src="${basepath}static/uijs/viewport.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
+    <script type="text/javascript" src="${basepath}static/uijs/changePwd.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
+    <script type="text/javascript" src="${basepath}static/uijs/userInfoSetting.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
 
 </html>

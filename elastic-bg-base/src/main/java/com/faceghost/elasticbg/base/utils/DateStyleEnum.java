@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public enum DateStyleEnum {
 
-	 yyyymmdd("0", "yyyyMMdd"), yyyy_mm_dd_hh_mm_ss("1", "yyyy-MM-dd HH:mm:ss"),yyyy_MM_dd("2","yyyy-MM-dd");
+	 yyyymmdd("0", "yyyyMMdd"), yyyy_mm_dd_hh_mm_ss("1", "yyyy-MM-dd HH:mm:ss"),yyyy_MM_dd("2","yyyy-MM-dd"),yyyymmddhhmmss("1", "yyyyMMddHHmmss");
 
     private final Serializable key;
 

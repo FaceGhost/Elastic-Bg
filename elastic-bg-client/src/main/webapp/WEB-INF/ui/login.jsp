@@ -25,8 +25,8 @@
 	  .login_wrapper .login_form .login_bot{padding-bottom: 10px;margin: 30px auto 2px;text-align: center;font-size: 12px;}
 	  .login_wrapper .login_form .login_bot a{color:#333;}
     </style>
-	<script type="text/javascript" src="${basepath}statics/js/jquery-2.1.4.min.js"></script>
-	<script type="text/javascript" src="${basepath}statics/js/jquery.placeholder.js"></script>
+	<script type="text/javascript" src="${basepath}static/js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="${basepath}static/js/jquery.placeholder.js"></script>
 	<script type="text/javascript">
 		var base = ${basepath};
 		//登录页面不可以在iframe中

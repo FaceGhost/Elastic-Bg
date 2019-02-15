@@ -31,7 +31,6 @@ import org.apache.shiro.web.servlet.ShiroHttpSession;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -147,7 +146,7 @@ public class ShiroConf {
          *
          */
         Map<String, String> hashMap = new LinkedHashMap<>();
-        hashMap.put("/statics/**", "anon");
+        hashMap.put("/static/**", "anon");
         hashMap.put("/sys/checkCode", "anon");
         hashMap.put("/login", "anon");
         hashMap.put("/**", "kickout,user");

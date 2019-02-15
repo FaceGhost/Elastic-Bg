@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ page import="com.faceghost.elasticbg.statics.JsCssVersionConst" %>
 <!DOCTYPE html >
 <html>
   <head>
@@ -16,27 +17,27 @@
 	<div id="loading-mask" style=""></div>
 	<div id="loading">
 	     <div class="loading-indicator">
-	         <img src="${basepath}statics/image/extanim32.gif" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>
+	         <img src="${basepath}static/image/extanim32.gif" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>
 	         <br /><span id="loading-msg">Loading ...</span>
 	     </div>
 	</div>
    </body>
-   <link rel="stylesheet" type="text/css" href="${basepath}statics/js/extjs/resources/css/ext-all.css" />
-   <link rel="stylesheet" type="text/css" href="${basepath}statics/css/awesome/css/font-awesome.min.css" />
-   <link rel="stylesheet" type="text/css" href="${basepath}statics/css/ext_override.css" />
-   <script type="text/javascript" charset="UTF-8" src="${basepath}statics/js/extjs/ext-all.js" ></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}statics/js/extjs-override/Js.ux.DatePicker.js" ></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}statics/js/extjs-override/js.ux.TreeCombo.js" ></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}statics/js/extjs-override/ComboBoxTree.js" ></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}statics/js/extjs-override/GridPanel.js" ></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}statics/js/extjs/ux/TabCloseMenu.js"></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}statics/js/extjs/locale/ext-lang-zh_CN.js"></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}statics/uijs/app.js"></script>
+   <link rel="stylesheet" type="text/css" href="${basepath}static/js/extjs/resources/css/ext-all.css" />
+   <link rel="stylesheet" type="text/css" href="${basepath}static/css/awesome/css/font-awesome.min.css" />
+   <link rel="stylesheet" type="text/css" href="${basepath}static/css/ext_override.css" />
+   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs/ext-all.js" ></script>
+   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs-override/Js.ux.DatePicker.js" ></script>
+   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs-override/js.ux.TreeCombo.js" ></script>
+   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs-override/ComboBoxTree.js" ></script>
+   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs-override/GridPanel.js" ></script>
+   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs/ux/TabCloseMenu.js"></script>
+   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs/locale/ext-lang-zh_CN.js"></script>
+   <script type="text/javascript" charset="UTF-8" src="${basepath}static/uijs/app.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
    <script type="text/javascript">
 	Ext.Loader.setConfig({
 		enabled: true,
 		paths: {
-			'Ext.ux': '${basepath}statics/js/extjs/ux'
+			'Ext.ux': '${basepath}static/js/extjs/ux'
 		}
 	});
 	var base = ${basepath};

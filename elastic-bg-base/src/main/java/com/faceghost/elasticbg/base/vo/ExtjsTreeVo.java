@@ -57,7 +57,7 @@ public class ExtjsTreeVo implements Serializable{
 		if(ValidateUtil.validateBlank(icon)) {
 			icon = "folder1.png";
 		}
-		return "statics/js/extjs/icon/" + icon;
+		return "static/js/extjs/icon/" + icon;
 	}
 
 	public Boolean getExpanded() {

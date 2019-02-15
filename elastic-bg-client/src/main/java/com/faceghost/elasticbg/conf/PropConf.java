@@ -23,7 +23,16 @@ public class PropConf {
     @Value("${elasticbg.login-max-retryNumber}")
     private Integer loginMaxRetryNumber;
 
-    @Value(("${elasticbg.login-ID-maxSession}"))
+    @Value("${elasticbg.login-ID-maxSession}")
     private Integer loginIDMaxSession;
+
+    @Value("${elasticbg.env.js-css-version-enabled}")
+    private Boolean envJsCssVersionEnabled;
+
+    @Value("${elasticbg.env.js-version}")
+    private String envJsVersion;
+
+    @Value("${elasticbg.env.css-version}")
+    private String envCssVersion;
 
 }

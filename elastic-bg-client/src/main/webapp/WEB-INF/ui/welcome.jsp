@@ -15,7 +15,7 @@
     欢迎使用&nbsp;Elastic-bg&nbsp;前后端分离权限基础框架
 </h2>
 <p class="line">
-PS:演示系统为只读模式，同一账号最对允许20人同时访问（按照FIFO策略提出）
+PS:演示系统为只读模式，同一账号最对允许20人同时访问（按照FIFO策略剔除）
 </p>
 <p class="line">
 GitHub：<a target="_blank" href="https://github.com/faceghost/elastic-bg">https://github.com/faceghost/elastic-bg</a>
@@ -56,7 +56,7 @@ GitHub：<a target="_blank" href="https://github.com/faceghost/elastic-bg">https
 <div class="his">
     <div class="item">
         <h3>赞助</h3>
-        <img src="${basepaht}statics/image/pay.jpg" width="250" height="134">
+        <img src="${basepaht}static/image/pay.jpg" width="250" height="134">
     </div>
 </div>
 </body>

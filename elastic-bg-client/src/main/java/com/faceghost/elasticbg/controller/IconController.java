@@ -30,7 +30,7 @@ public class IconController extends BaseController {
     public Object getSystemOrgPageVo(){
         PageVo pageList = new PageVo();
         try {
-            String path = "statics" + File.separator + "js" + File.separator + "extjs" + File.separator +"icon";
+            String path = "static" + File.separator + "js" + File.separator + "extjs" + File.separator +"icon";
             File file = ResourceUtils.getFile("classpath:" + path);
             if(file.exists()){
                 File[] files = file.listFiles();
