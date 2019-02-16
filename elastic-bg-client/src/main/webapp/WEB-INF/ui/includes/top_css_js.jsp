@@ -40,7 +40,7 @@
 			'Ext.ux': '${basepath}static/js/extjs/ux'
 		}
 	});
-	var base = ${basepath};
+	var base = '${basepath}';
 	//ajax session超时跳转至登录页面
     Ext.Ajax.addListener("requestcomplete",function(conn, response, options, eOpts){
         var msg = response.getAllResponseHeaders();

@@ -28,7 +28,7 @@
 	<script type="text/javascript" src="${basepath}static/js/jquery-2.1.4.min.js"></script>
 	<script type="text/javascript" src="${basepath}static/js/jquery.placeholder.js"></script>
 	<script type="text/javascript">
-		var base = ${basepath};
+		var base = '${basepath}';
 		//登录页面不可以在iframe中
         if (self != top) {
             window.top.location.href = base

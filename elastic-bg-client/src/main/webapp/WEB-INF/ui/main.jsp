@@ -78,7 +78,7 @@
 				'Ext.ux': '${basepath}static/js/extjs/ux'
 			}
 		});
-		var base = ${basepath};
+		var base = '${basepath}';
 	</script>
 	<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading 初始化 ...';</script>
     <script type="text/javascript" src="${basepath}static/uijs/viewport.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
