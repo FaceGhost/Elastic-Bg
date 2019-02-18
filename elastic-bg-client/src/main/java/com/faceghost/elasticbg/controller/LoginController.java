@@ -136,11 +136,7 @@ public class LoginController extends BaseController {
 					UsernamePasswordToken token = new UsernamePasswordToken(username,PasswordUtil.encryptPassword(password,bean.getId(),bean.getSalt()));
 					//shiro执行登录
 					user.login(token);
-
-					//清除登录失败次数，
-					if(maxRetryNunber > 0 && bean.getRetryNumber() != null && bean.getRetryNumber() >0){
-						systemUserService.updateByLogin(username, 1, 0,new Date());
-					}
+					systemUserService.updateByLogin(username, 1, 0,new Date());
 					systemLogService.saveLog
 							(
 							LogType.LOGIN.getType(),
@@ -166,8 +162,8 @@ public class LoginController extends BaseController {
 				String msg = "";
 				//是否冻结账户
 				if(maxRetryNunber > 0 ){
-					msg = "用户名或密码错误，剩余次数: "+( 5 - retryNumber );
-					if(retryNumber == maxRetryNunber){
+					msg = "用户名或密码错误，剩余次数: "+( maxRetryNunber - retryNumber );
+					if(retryNumber >= maxRetryNunber){
 						systemUserService.updateByLogin(username, 0, retryNumber,new Date());
 					}else{
 						systemUserService.updateByLogin(username, 1, retryNumber,new Date());
