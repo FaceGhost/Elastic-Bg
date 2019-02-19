@@ -2,7 +2,11 @@
 
 ### Java前后端分离权限基础框架
 
-[演示地址](http://elastic-bg.faceghost.com/elastic-bg-client "演示地址")
+[ GitHub地址 ](https://github.com/faceghost/elastic-bg )
+
+[ Gitee地址 ](https://gitee.com/faceghost/elastic-bg )
+
+[ 演示地址 ](http://elastic-bg.faceghost.com/elastic-bg-client )
 
 - 账户名：super_admin
 
