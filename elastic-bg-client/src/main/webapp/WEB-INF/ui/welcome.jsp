@@ -19,7 +19,10 @@ PS:演示系统为只读模式，同一账号最对允许20人同时访问（按
 </p>
 <p class="line">
 GitHub：<a target="_blank" href="https://github.com/faceghost/elastic-bg">https://github.com/faceghost/elastic-bg</a>
+<br>
+Gitee：<a target="_blank" href="https://gitee.com/faceghost/Elastic-Bg">https://gitee.com/faceghost/elastic-bg</a>
 </p>
+
 <p class="line">
     <h3>作者</h3>
 <ul>
