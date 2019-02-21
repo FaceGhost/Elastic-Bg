@@ -18,9 +18,14 @@
 PS:演示系统为只读模式，同一账号最对允许20人同时访问（按照FIFO策略剔除）
 </p>
 <p class="line">
-GitHub：<a target="_blank" href="https://github.com/faceghost/elastic-bg">https://github.com/faceghost/elastic-bg</a>
-<br>
-Gitee：<a target="_blank" href="https://gitee.com/faceghost/Elastic-Bg">https://gitee.com/faceghost/elastic-bg</a>
+    GitHub：<a target="_blank" href="https://github.com/faceghost/elastic-bg">https://github.com/faceghost/elastic-bg</a>
+    <br>
+    Gitee：<a target="_blank" href="https://gitee.com/faceghost/Elastic-Bg">https://gitee.com/faceghost/elastic-bg</a>
+</p>
+
+<p class="line">
+    <h3>相关文章</h3>
+    <a target="_blank" href="https://faceghost.com/article/478001">IDEA本地运行Elastic-Bg框架</a>
 </p>
 
 <p class="line">
