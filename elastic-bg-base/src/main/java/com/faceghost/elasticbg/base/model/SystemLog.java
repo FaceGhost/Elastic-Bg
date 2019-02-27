@@ -65,6 +65,11 @@ public class SystemLog extends  BaseModel{
     private Integer ip2;
 
     /**
+     * 城市
+     */
+    private String city;
+
+    /**
      * 备注
      */
     private String ps;

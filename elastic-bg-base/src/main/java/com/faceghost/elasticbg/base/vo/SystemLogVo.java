@@ -78,6 +78,10 @@ public class SystemLogVo extends  BaseModel{
      */
     private String ip2Str;
 
+    /**
+     * 城市
+     */
+    private String city;
 
     /**
      * 备注

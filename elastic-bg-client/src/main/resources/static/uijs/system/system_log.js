@@ -84,6 +84,7 @@ Ext.onReady(function(){
             { name: 'oper', type: 'string' },
             { name: 'ip1Str', type: 'string' },
             { name: 'ip2Str', type: 'string' },
+            { name: 'city', type: 'string' },
             { name: 'ps', type: 'string' }
 
 
@@ -128,14 +129,15 @@ Ext.onReady(function(){
 	    columns: [
             { text: 'ID',  dataIndex: 'id',hidden:true},
             { text: '操作人员',  dataIndex: 'insertU',width : 100 },
+            { text: '内网IP',  dataIndex: 'ip1Str',width : 100 },
+            { text: '外网IP',  dataIndex: 'ip2Str',width : 120 },
+            { text: '城市',  dataIndex: 'city',width : 200 },
             { text: '操作时间',  dataIndex: 'insertTStr',width : 150 },
             { text: '类名',  dataIndex: 'className',width : 200 },
             { text: '方法',  dataIndex: 'method',width : 200 },
             { text: '类型',  dataIndex: 'type',width : 100 },
             { text: '参考ID',  dataIndex: 'refId',width : 100 },
             { text: '操作/异常',  dataIndex: 'oper',width : 200 },
-            { text: '内网IP',  dataIndex: 'ip1Str',width : 100 },
-            { text: '外网IP',  dataIndex: 'ip2Str',width : 100 },
             { text: '备注',  dataIndex: 'ps',width : 150 }
 
 

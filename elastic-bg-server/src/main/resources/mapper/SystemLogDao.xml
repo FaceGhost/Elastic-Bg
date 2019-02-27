@@ -12,10 +12,11 @@
     <result column="oper" jdbcType="VARCHAR" property="oper" />
     <result column="ip_1" jdbcType="INTEGER" property="ip1" />
     <result column="ip_2" jdbcType="INTEGER" property="ip2" />
+    <result column="city" jdbcType="VARCHAR" property="ps" />
     <result column="ps" jdbcType="VARCHAR" property="ps" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, insert_t, insert_u, class_name, `method`, `type`, ref_id, oper, ip_1, ip_2, ps
+    id, insert_t, insert_u, class_name, `method`, `type`, ref_id, oper, ip_1, ip_2,city, ps
   </sql>
   <!-- auto -->
 
@@ -32,6 +33,7 @@
     t.oper,
     inet_ntoa(t.ip_1) ip1Str,
     inet_ntoa(t.ip_2) ip2Str,
+    t.city,
     t.ps
     FROM
     system_log t
@@ -88,6 +90,9 @@
       <if test="ip2Str != null">
         ip_2,
       </if>
+      <if test="city != null">
+        city,
+      </if>
       <if test="ps != null">
         ps,
       </if>
@@ -119,6 +124,9 @@
       </if>
       <if test="ip2Str != null">
         inet_aton(#{ip2Str}),
+      </if>
+      <if test="city != null">
+        #{city,jdbcType=VARCHAR},
       </if>
       <if test="ps != null">
         #{ps,jdbcType=VARCHAR},

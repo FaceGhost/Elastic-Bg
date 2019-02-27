@@ -2,6 +2,7 @@ package com.faceghost.elasticbg.service;
 
 import com.faceghost.elasticbg.base.service.SystemLogService;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
+import com.faceghost.elasticbg.base.utils.ip.IPSearchUtil;
 import com.faceghost.elasticbg.base.vo.PageVo;
 import com.faceghost.elasticbg.base.vo.SystemLogVo;
 import com.faceghost.elasticbg.mapper.SystemLogMapper;
@@ -22,6 +23,8 @@ public class SystemLogServiceImpl implements SystemLogService {
 
 	@Autowired
 	private SystemLogMapper systemLogMapper;
+
+	private static final String ipdbPath =  SystemLogServiceImpl.class.getResource("/ip2region.db").getPath();
 
 
 
@@ -69,6 +72,24 @@ public class SystemLogServiceImpl implements SystemLogService {
 		bean.setOper(oper);
 		bean.setIp1Str(ip1Str);
 		bean.setIp2Str(ip2Str);
+
+		try{
+
+			String city = "";
+			if(!ValidateUtil.validateBlank(ip2Str) && ip2Str.indexOf(".") > 0){
+				city = IPSearchUtil.getCityInfo(ip2Str,ipdbPath);
+			}
+			if(city.length() > 25 ){
+				city  = city.substring(0,25);
+			}
+			bean.setCity(city);
+		}catch (Exception e){
+				log.info("根据IP[{}]获取城市失败",ip2Str);
+		}
+
+
 		return systemLogMapper.saveBean(bean);
 	}
+
+
 }
