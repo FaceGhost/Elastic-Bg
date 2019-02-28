@@ -1,11 +1,11 @@
 package com.faceghost.elasticbg.base.utils.ip;
 
-import java.lang.reflect.Method;
-
 import org.lionsoul.ip2region.DataBlock;
 import org.lionsoul.ip2region.DbConfig;
 import org.lionsoul.ip2region.DbSearcher;
 import org.lionsoul.ip2region.Util;
+
+import java.lang.reflect.Method;
 
 public class IPSearchUtil {
 	
@@ -45,10 +45,8 @@ public class IPSearchUtil {
 	
     public static void main(String[] argv)
     {    
-    	String ip = "180.171.128.216";
-    	
-    	
+    	String ip = "120.85.77.178";
     	System.out.println(getCityInfo(ip));
-    	
+
     }
 }
