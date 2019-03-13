@@ -1,6 +1,7 @@
 package com.faceghost.elasticbg.service;
 
 import com.faceghost.elasticbg.base.service.SystemLogService;
+import com.faceghost.elasticbg.base.utils.ExceptionUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
 import com.faceghost.elasticbg.base.utils.ip.IPSearchUtil;
 import com.faceghost.elasticbg.base.vo.PageVo;
@@ -84,7 +85,7 @@ public class SystemLogServiceImpl implements SystemLogService {
 			}
 			bean.setCity(city);
 		}catch (Exception e){
-				log.info("根据IP[{}]获取城市失败",ip2Str);
+				log.info("根据IP[{}]获取城市失败,错误:{}",ip2Str, ExceptionUtil.getExDetail(e));
 		}
 
 

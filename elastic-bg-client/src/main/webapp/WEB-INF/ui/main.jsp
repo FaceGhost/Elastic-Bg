@@ -31,7 +31,7 @@
 	 	 <div id="loading-mask" style=""></div>
 		 <div id="loading">
 	        <div class="loading-indicator">
-	            <img src="${basepath}static/image/extanim32.gif" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>Elastic-Bg综合管理系统
+	            <img src="${base}static/image/extanim32.gif" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>Elastic-Bg综合管理系统
 	            <br /><span id="loading-msg">Loading styles and images...</span>
 	        </div>
 	     </div>
@@ -62,27 +62,26 @@
 				<i class="fa fa-copyright"></i> 2019 Elastic-Bg
 		</div>
 	</body>
-    <base href="${basepath}">
-    <script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading UI样式 ...';</script>
-	<link rel="stylesheet" type="text/css" href="${basepath}static/js/extjs/resources/css/ext-all.css" />
-	<link rel="stylesheet" type="text/css" href="${basepath}static/css/awesome/css/font-awesome.min.css" />
-	<link rel="stylesheet" type="text/css" href="${basepath}static/css/ext_override.css" />
-	<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading UI组件 ...';</script>
-	<script type="text/javascript" src="${basepath}static/js/extjs/ext-all.js" ></script>
-	<script type="text/javascript" src="${basepath}static/js/extjs/ux/TabCloseMenu.js"></script>
-	<script type="text/javascript" src="${basepath}static/js/extjs/locale/ext-lang-zh_CN.js"></script>
+    <base href="${base}">
+    <script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading UI ...';</script>
+	<link rel="stylesheet" type="text/css" href="${base}static/js/extjs/resources/css/ext-all.css" />
+	<link rel="stylesheet" type="text/css" href="${base}static/css/awesome/css/font-awesome.min.css" />
+	<link rel="stylesheet" type="text/css" href="${base}static/css/ext_override.css" />
+	<script type="text/javascript" src="${base}static/js/extjs/ext-all.js" ></script>
+	<script type="text/javascript" src="${base}static/js/extjs/ux/TabCloseMenu.js"></script>
+	<script type="text/javascript" src="${base}static/js/extjs/locale/ext-lang-zh_CN.js"></script>
    	<script type="text/javascript">
 		Ext.Loader.setConfig({
 			enabled: true,
 			paths: {
-				'Ext.ux': '${basepath}static/js/extjs/ux'
+				'Ext.ux': '${base}static/js/extjs/ux'
 			}
 		});
-		var base = '${basepath}';
+		var base = '${base}';
 	</script>
 	<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading 初始化 ...';</script>
-    <script type="text/javascript" src="${basepath}static/uijs/viewport.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
-    <script type="text/javascript" src="${basepath}static/uijs/changePwd.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
-    <script type="text/javascript" src="${basepath}static/uijs/userInfoSetting.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
+    <script type="text/javascript" src="${base}static/uijs/viewport.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
+    <script type="text/javascript" src="${base}static/uijs/changePwd.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
+    <script type="text/javascript" src="${base}static/uijs/userInfoSetting.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
 
 </html>

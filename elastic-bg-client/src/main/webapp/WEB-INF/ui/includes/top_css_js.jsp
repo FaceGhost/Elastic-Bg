@@ -3,7 +3,7 @@
 <!DOCTYPE html >
 <html>
   <head>
- 	  <base href="${basepath}">
+ 	  <base href="${base}">
       <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1" />
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	  <style>
@@ -17,30 +17,30 @@
 	<div id="loading-mask" style=""></div>
 	<div id="loading">
 	     <div class="loading-indicator">
-	         <img src="${basepath}static/image/extanim32.gif" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>
+	         <img src="${base}static/image/extanim32.gif" width="32" height="32" style="margin-right:8px;float:left;vertical-align:top;"/>
 	         <br /><span id="loading-msg">Loading ...</span>
 	     </div>
 	</div>
    </body>
-   <link rel="stylesheet" type="text/css" href="${basepath}static/js/extjs/resources/css/ext-all.css" />
-   <link rel="stylesheet" type="text/css" href="${basepath}static/css/awesome/css/font-awesome.min.css" />
-   <link rel="stylesheet" type="text/css" href="${basepath}static/css/ext_override.css" />
-   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs/ext-all.js" ></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs-override/Js.ux.DatePicker.js" ></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs-override/js.ux.TreeCombo.js" ></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs-override/ComboBoxTree.js" ></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs-override/GridPanel.js" ></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs/ux/TabCloseMenu.js"></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}static/js/extjs/locale/ext-lang-zh_CN.js"></script>
-   <script type="text/javascript" charset="UTF-8" src="${basepath}static/uijs/app.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
+   <link rel="stylesheet" type="text/css" href="${base}static/js/extjs/resources/css/ext-all.css" />
+   <link rel="stylesheet" type="text/css" href="${base}static/css/awesome/css/font-awesome.min.css" />
+   <link rel="stylesheet" type="text/css" href="${base}static/css/ext_override.css" />
+   <script type="text/javascript" charset="UTF-8" src="${base}static/js/extjs/ext-all.js" ></script>
+   <script type="text/javascript" charset="UTF-8" src="${base}static/js/extjs-override/Js.ux.DatePicker.js" ></script>
+   <script type="text/javascript" charset="UTF-8" src="${base}static/js/extjs-override/js.ux.TreeCombo.js" ></script>
+   <script type="text/javascript" charset="UTF-8" src="${base}static/js/extjs-override/ComboBoxTree.js" ></script>
+   <script type="text/javascript" charset="UTF-8" src="${base}static/js/extjs-override/GridPanel.js" ></script>
+   <script type="text/javascript" charset="UTF-8" src="${base}static/js/extjs/ux/TabCloseMenu.js"></script>
+   <script type="text/javascript" charset="UTF-8" src="${base}static/js/extjs/locale/ext-lang-zh_CN.js"></script>
+   <script type="text/javascript" charset="UTF-8" src="${base}static/uijs/app.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
    <script type="text/javascript">
 	Ext.Loader.setConfig({
 		enabled: true,
 		paths: {
-			'Ext.ux': '${basepath}static/js/extjs/ux'
+			'Ext.ux': '${base}static/js/extjs/ux'
 		}
 	});
-	var base = '${basepath}';
+	var base = '${base}';
 	//ajax session超时跳转至登录页面
     Ext.Ajax.addListener("requestcomplete",function(conn, response, options, eOpts){
         var msg = response.getAllResponseHeaders();

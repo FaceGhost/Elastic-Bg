@@ -2,8 +2,8 @@
 <%@ include file="../includes/meta.jsp" %>
 <%@ include file="../includes/top_css_js.jsp" %>
 <shiro:hasPermission name="system:perm:view">
-    <script src="${basepath}static/uijs/system/system_perm.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
-    <script src="${basepath}static/uijs/system/system_perm_oper.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
+    <script src="${base}static/uijs/system/system_perm.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
+    <script src="${base}static/uijs/system/system_perm_oper.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>
 </shiro:hasPermission>
 <shiro:lacksPermission name="system:perm:view">
     <%@include file="../error/no_access.jsp"%>

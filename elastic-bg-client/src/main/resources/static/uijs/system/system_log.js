@@ -129,10 +129,9 @@ Ext.onReady(function(){
 	    columns: [
             { text: 'ID',  dataIndex: 'id',hidden:true},
             { text: '操作人员',  dataIndex: 'insertU',width : 100 },
-            { text: '内网IP',  dataIndex: 'ip1Str',width : 100 },
+            { text: '操作时间',  dataIndex: 'insertTStr',width : 150 },
             { text: '外网IP',  dataIndex: 'ip2Str',width : 120 },
             { text: '城市',  dataIndex: 'city',width : 200 },
-            { text: '操作时间',  dataIndex: 'insertTStr',width : 150 },
             { text: '类名',  dataIndex: 'className',width : 200 },
             { text: '方法',  dataIndex: 'method',width : 200 },
             { text: '类型',  dataIndex: 'type',width : 100 },
