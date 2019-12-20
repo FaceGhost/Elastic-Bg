@@ -1,9 +1,9 @@
 package com.faceghost.elasticbg.controller;
 
-import com.faceghost.elasticbg.base.controller.BaseController;
 import com.faceghost.elasticbg.base.exception.RootException;
 import com.faceghost.elasticbg.base.statics.BaseSysConst;
 import com.faceghost.elasticbg.base.utils.CheckImageUtil;
+import com.faceghost.elasticbg.controller.base.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 

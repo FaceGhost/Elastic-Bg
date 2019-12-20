@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
-<%@ page import="com.faceghost.elasticbg.statics.JsCssVersionConst" %>
+<%@ page import="com.faceghost.elasticbg.cons.JsCssVersionConst" %>
 <!DOCTYPE html >
 <html>
   <head>

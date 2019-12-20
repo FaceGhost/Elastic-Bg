@@ -136,8 +136,8 @@
 	WHERE
 		t.id = sp.system_permission_id
 	AND sp.system_role_id IN
-	  <foreach collection ="rids" item="id" index= "index" separator =",">
-		  (#{id})
+	  <foreach collection ="rids" item="id" open="(" close=")" index= "index" separator =",">
+		  #{id}
 	  </foreach>
   </select>
   <!-- 根据pId查询 -->

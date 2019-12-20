@@ -1,20 +1,20 @@
 package com.faceghost.elasticbg.controller;
 
-import com.faceghost.elasticbg.base.controller.BaseController;
 import com.faceghost.elasticbg.base.model.SystemUser;
-import com.faceghost.elasticbg.base.service.SystemLogService;
-import com.faceghost.elasticbg.base.service.SystemUserService;
 import com.faceghost.elasticbg.base.shiro.ShiroKit;
 import com.faceghost.elasticbg.base.shiro.ShiroUser;
 import com.faceghost.elasticbg.base.statics.BaseSysConst;
 import com.faceghost.elasticbg.base.statics.ErrorMsgConst;
 import com.faceghost.elasticbg.base.statics.LogType;
 import com.faceghost.elasticbg.base.utils.ExceptionUtil;
-import com.faceghost.elasticbg.base.utils.IPUtil;
-import com.faceghost.elasticbg.base.utils.PasswordUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
 import com.faceghost.elasticbg.base.vo.BaseVo;
 import com.faceghost.elasticbg.conf.PropConf;
+import com.faceghost.elasticbg.controller.base.BaseController;
+import com.faceghost.elasticbg.service.SystemLogService;
+import com.faceghost.elasticbg.service.SystemUserService;
+import com.faceghost.elasticbg.utils.IPUtil;
+import com.faceghost.elasticbg.utils.PasswordUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -53,18 +53,18 @@ public class LoginController extends BaseController {
 	 */
 	@GetMapping(value = "/")
 	public String index(){
-		return REDIRECT + "/login";
+		return REDIRECT + "/login.htm";
 	}
 
 	/**
-	 * 登录页面跳转，如果已经登录则跳转至系统主界面"/main"
+	 * 登录页面跳转，如果已经登录则跳转至系统主界面"/main.htm"
 	 * @return
 	 */
-	@GetMapping(value = "/login")
+	@GetMapping(value = "/login.htm")
 	public String login(){
 		//是否已经登录
 		if(ShiroKit.getUser() != null || ShiroKit.isAuthenticated()){
-			return REDIRECT + "/main";
+			return REDIRECT + "/main.htm";
 		}
 		return "login";
 	}
@@ -76,10 +76,10 @@ public class LoginController extends BaseController {
 	 * @param validateCode 验证码
  	 * @return
 	 */
-	@PostMapping(value = "/login")
+	@PostMapping(value = "/execLogin")
 	@ResponseBody
-	public BaseVo login(String username,String password,String validateCode) {
-		String methodName = "login";
+	public BaseVo execLogin(String username,String password,String validateCode) {
+		String methodName = "execLogin";
 		BaseVo vo = new BaseVo();
 		//尝试登录系统错误次数
 		int retryNumber=0;
@@ -127,13 +127,13 @@ public class LoginController extends BaseController {
 						return vo;
 					}
 
-					if(bean.getRetryNumber() <= 0){
+					if(bean.getRetryNumber() == null || bean.getRetryNumber() <= 0){
 						retryNumber = 1;
 					}else{
 						retryNumber = bean.getRetryNumber() + 1;
 					}
 					//明文密码---->暗文密码
-					UsernamePasswordToken token = new UsernamePasswordToken(username,PasswordUtil.encryptPassword(password,bean.getId(),bean.getSalt()));
+					UsernamePasswordToken token = new UsernamePasswordToken(username, PasswordUtil.encryptPassword(password,bean.getId(),bean.getSalt()));
 					//shiro执行登录
 					user.login(token);
 					systemUserService.updateByLogin(username, 1, 0,new Date());
@@ -213,7 +213,7 @@ public class LoginController extends BaseController {
 	/**
 	 * 退出登录
 	 */
-	@GetMapping(value = "/logout")
+	@GetMapping(value = "/logout.htm")
 	public String logOut() {
 		String methodName = "logOut";
 		if(getLoginUser() != null){
@@ -230,7 +230,7 @@ public class LoginController extends BaseController {
 				);
 		}
 		ShiroKit.getSubject().logout();
-		return REDIRECT + "/login";
+		return REDIRECT + "/login.htm";
 	}
 
 }

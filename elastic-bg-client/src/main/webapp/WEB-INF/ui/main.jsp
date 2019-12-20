@@ -2,7 +2,7 @@
 <%@ include file="./includes/meta.jsp" %>
 <%@ page import="com.faceghost.elasticbg.base.statics.BaseSysConst" %>
 <%@ page import="com.faceghost.elasticbg.base.shiro.ShiroUser" %>
-<%@ page import="com.faceghost.elasticbg.statics.JsCssVersionConst" %>
+<%@ page import="com.faceghost.elasticbg.cons.JsCssVersionConst" %>
 <%--加载该页面时，执行doGetAuthenticationInfo进行加载权限认证信息 --%>
 <shiro:hasPermission name="load:doGetAuthorizationInfo"/>
 <!DOCTYPE html >
@@ -36,7 +36,7 @@
 	        </div>
 	     </div>
 		 <div id="div_center">
-			<iframe id="iframe_main" src="welcome.html" width="100%" height="100%" style="min-height:500px;" frameborder="0" ></iframe>
+			<iframe id="iframe_main" src="${base}welcome.htm" width="100%" height="100%" style="min-height:500px;" frameborder="0" ></iframe>
 		</div>
 		
 			<div id="layout_top_div" class="layout_top_div" >
@@ -53,7 +53,7 @@
 									|
 									<a id="changePwd" ><i  class="fa fa-key"></i> 修改密码</a>
 									|
-									<a><i class="fa fa-power-off"></i> <a href="logout">退出</a></a>						
+									<a><i class="fa fa-power-off"></i> <a href="logout.htm">退出</a></a>
 							</div>
 						</div>
 			</div>

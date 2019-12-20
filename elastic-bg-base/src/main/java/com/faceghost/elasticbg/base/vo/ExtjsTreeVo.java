@@ -1,8 +1,8 @@
 package com.faceghost.elasticbg.base.vo;
 
-import com.faceghost.elasticbg.base.utils.ValidateUtil;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class ExtjsTreeVo implements Serializable{
 
 	/**
@@ -53,20 +54,6 @@ public class ExtjsTreeVo implements Serializable{
 	 */
 	private List<ExtjsTreeVo> children = new ArrayList<ExtjsTreeVo>();
 
-	public String getIcon() {
-		if(ValidateUtil.validateBlank(icon)) {
-			icon = "folder1.png";
-		}
-		return "static/js/extjs/icon/" + icon;
-	}
 
-	public Boolean getExpanded() {
-		if( "1".equals(isAutoExpand)) {
-			return Boolean.TRUE;
-		}
-		return expanded;
-	}
-
-	
 	
 }

@@ -1,17 +1,15 @@
 package com.faceghost.elasticbg.conf;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@Getter
-@Setter
+@Data
 @Component
 @Configurable
-@ConfigurationProperties(prefix = "elasticbg") //只注入以app开头的属性
+@ConfigurationProperties(prefix = "elasticbg")
 public class PropConf {
 
     @Value("${elasticbg.email_host_name}")

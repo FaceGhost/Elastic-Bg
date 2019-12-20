@@ -1,0 +1,15 @@
+server:
+  port: 7000
+eureka:
+  instance:
+    hostname: elastic-bg-erueka
+    prefer-ip-address: false
+    lease-expiration-duration-in-seconds: 30 # 续约到期时间（默认90秒）
+    lease-renewal-interval-in-seconds: 15 # 续约更新时间间隔（默认30秒）
+  server:
+    enable-self-preservation: true #自我保护
+  client:
+    registerWithEureka: false #是否注册到eureka服务器，自己就是eureka服务器，不需要注册自身
+    fetchRegistry: false #是否从eureka服务器获取注册信息
+    serviceUrl:
+      defaultZone: http://localhost:7000/eureka/

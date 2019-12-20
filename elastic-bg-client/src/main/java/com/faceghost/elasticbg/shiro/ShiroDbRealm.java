@@ -1,14 +1,14 @@
 package com.faceghost.elasticbg.shiro;
 
 import com.faceghost.elasticbg.base.model.SystemUser;
-import com.faceghost.elasticbg.base.service.SystemPermissionService;
-import com.faceghost.elasticbg.base.service.SystemRoleService;
-import com.faceghost.elasticbg.base.service.SystemUserService;
 import com.faceghost.elasticbg.base.shiro.ShiroUser;
-import com.faceghost.elasticbg.base.utils.PasswordUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
 import com.faceghost.elasticbg.base.vo.SystemPermissionVo;
 import com.faceghost.elasticbg.base.vo.SystemRoleVo;
+import com.faceghost.elasticbg.service.SystemPermissionService;
+import com.faceghost.elasticbg.service.SystemRoleService;
+import com.faceghost.elasticbg.service.SystemUserService;
+import com.faceghost.elasticbg.utils.PasswordUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;

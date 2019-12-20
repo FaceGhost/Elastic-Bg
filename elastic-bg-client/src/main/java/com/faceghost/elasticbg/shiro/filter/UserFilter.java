@@ -19,6 +19,7 @@
 package com.faceghost.elasticbg.shiro.filter;
 
 import com.faceghost.elasticbg.base.shiro.ShiroKit;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
@@ -37,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @since 0.9
  */
+@Slf4j
 public class UserFilter extends AccessControlFilter {
 
     /**
@@ -69,7 +71,6 @@ public class UserFilter extends AccessControlFilter {
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
         HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
-
         /**
          * 如果是ajax请求则不进行跳转
          */
@@ -93,7 +94,7 @@ public class UserFilter extends AccessControlFilter {
                  */
                 if (ShiroKit.getSession().getAttribute("sessionFlag") == null) {
                     httpServletRequest.setAttribute("tips", "session超时");
-                    httpServletRequest.getRequestDispatcher("/login").forward(request, response);
+                    httpServletRequest.getRequestDispatcher("/login.htm").forward(request, response);
                     return false;
                 } else {
                     saveRequestAndRedirectToLogin(request, response);

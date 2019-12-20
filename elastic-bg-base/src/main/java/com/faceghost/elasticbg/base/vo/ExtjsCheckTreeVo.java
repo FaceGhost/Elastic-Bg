@@ -34,13 +34,7 @@ public class ExtjsCheckTreeVo implements Serializable{
 		if(checked_ != null && checked_ > 0) return Boolean.TRUE;
 		return checked;
 	}
-	public String getIcon() {
-		if(ValidateUtil.validateBlank(icon)) {
-			icon = "folder1.png";
-		}
-		return "static/js/extjs/icon/" + icon;
-	}
-	
+
 	
 	
 	

@@ -1,9 +1,9 @@
 package com.faceghost.elasticbg.controller;
 
-import com.faceghost.elasticbg.base.controller.BaseController;
 import com.faceghost.elasticbg.base.utils.ExceptionUtil;
 import com.faceghost.elasticbg.base.vo.IconVo;
 import com.faceghost.elasticbg.base.vo.PageVo;
+import com.faceghost.elasticbg.controller.base.BaseController;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.stereotype.Controller;

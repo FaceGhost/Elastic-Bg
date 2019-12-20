@@ -1,0 +1,37 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /elasticBg-server
+#mysql
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/elasticbg?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowMultiQueries=true
+    username: root
+    password: root
+  application:
+    name: elasticBg-server
+  main:
+    allow-bean-definition-overriding: true
+
+#系统是否只读模式
+elasticbg:
+  machine: 1
+  env:
+    readonly: false
+
+eureka:
+  instance:
+    lease-expiration-duration-in-seconds: 10 #本服务10s内没有心跳,就将该服务从服务端剔除
+    lease-renewal-interval-in-seconds: 5  #每隔5s心跳一次,证明本服务还活着
+  client:
+    service-url:
+      defaultZone:  http://localhost:7000/eureka/
+    fetch-registry: true
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 10000
+        read-timeout: 10000
+

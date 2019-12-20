@@ -56,7 +56,7 @@
                     $('input[name="submit_btn"]').val('登录中');
                     $.ajax({
                         type:'POST',
-                        url: base + 'login',
+                        url: base + 'execLogin',
                         data:{
                             'username': username ,
                             'password': password
@@ -68,7 +68,7 @@
                                 $('input[name="submit_btn"]').val('系统繁忙，请稍后重试！');
                             }
                             if(data != null && data.success){
-                                window.location = base + 'main';
+                                window.location = base + 'main.htm';
                             }else{
                                 $('input[name="submit_btn"]').val(data.msg);
                             }
@@ -121,7 +121,7 @@
 				  <input ing="false" type="button" name="submit_btn"  class="login_input submit_btn"  value="确定"/>
 			  </div>
 			  <div class="login_bot">
-				  演示系统&nbsp;<a target="_blank" href="https://faceghost.com">见鬼网</a>&nbsp;提供，技术服务请关注公众号：见鬼网
+				  演示系统&nbsp;<a target="_blank" href="https://faceghost.com">Fg社区</a>&nbsp;提供，技术服务请关注公众号：见鬼网
 			  </div>
 		  </form>
 	  </div>

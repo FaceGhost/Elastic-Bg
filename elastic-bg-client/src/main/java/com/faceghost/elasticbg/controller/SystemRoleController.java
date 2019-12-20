@@ -1,21 +1,21 @@
 package com.faceghost.elasticbg.controller;
 
-import com.faceghost.elasticbg.base.controller.BaseController;
 import com.faceghost.elasticbg.base.model.SystemOrg;
 import com.faceghost.elasticbg.base.model.SystemRole;
 import com.faceghost.elasticbg.base.model.SystemRolePermission;
-import com.faceghost.elasticbg.base.service.SystemLogService;
-import com.faceghost.elasticbg.base.service.SystemRolePermissionService;
-import com.faceghost.elasticbg.base.service.SystemRoleService;
 import com.faceghost.elasticbg.base.statics.ErrorMsgConst;
 import com.faceghost.elasticbg.base.statics.LogType;
 import com.faceghost.elasticbg.base.utils.ExceptionUtil;
-import com.faceghost.elasticbg.base.utils.IPUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
 import com.faceghost.elasticbg.base.vo.BaseVo;
 import com.faceghost.elasticbg.base.vo.ExtjsCheckTreeVo;
 import com.faceghost.elasticbg.base.vo.PageVo;
 import com.faceghost.elasticbg.base.vo.SystemRoleVo;
+import com.faceghost.elasticbg.controller.base.BaseController;
+import com.faceghost.elasticbg.service.SystemLogService;
+import com.faceghost.elasticbg.service.SystemRolePermissionService;
+import com.faceghost.elasticbg.service.SystemRoleService;
+import com.faceghost.elasticbg.utils.IPUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ import java.util.List;
 @Slf4j
 @Controller
 @RequestMapping("/systemRole")
-public class SystemRoleController  extends BaseController{
+public class SystemRoleController  extends BaseController {
 
 	@Autowired
 	private SystemRoleService systemRoleService;

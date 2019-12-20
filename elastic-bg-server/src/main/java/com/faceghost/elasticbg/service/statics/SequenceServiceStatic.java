@@ -1,10 +1,10 @@
 package com.faceghost.elasticbg.service.statics;
 
 import com.faceghost.elasticbg.base.exception.BusiException;
-import com.faceghost.elasticbg.base.service.SystemParamsService;
 import com.faceghost.elasticbg.base.utils.RandomKeyUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
 import com.faceghost.elasticbg.conf.PropConf;
+import com.faceghost.elasticbg.service.SystemParamsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;

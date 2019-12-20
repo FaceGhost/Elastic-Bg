@@ -5,11 +5,7 @@
           http://www.springframework.org/schema/beans
           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
-    <!-- 配置UrlFilenameViewController 会将 "/index" 这样的请求映射成名为 "index" 的JSP视图  -->
-    <bean id="viewMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" >
-        <property name="defaultHandler">
-            <bean name="index" class="org.springframework.web.servlet.mvc.UrlFilenameViewController" />
-        </property>
-    </bean>
+    <!-- 匹配所有的htm , 自动在WEB-INF/ui查找对应的页面，如访问~/welcome.htm,返回welcome.jsp页面 -->
+    <bean name="/**/*.htm" class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
 
 </beans>

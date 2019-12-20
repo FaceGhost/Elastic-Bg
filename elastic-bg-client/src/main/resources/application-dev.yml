@@ -1,0 +1,28 @@
+server:
+  port: 9000
+elasticbg:
+  session-invalidate-time: 1800 #session失效时间 单位：秒
+  session-validation-interval: 900 #多久检测一次失效的session 单位：秒
+  login-max-retryNumber: 5 #登录尝试失败N次数后冻结账户,0永不冻结
+  login-ID-maxSession: 0 #同一账号允许同时在线数量,0不限
+  remote:
+    server-name: elasticBg-server #@FeignClient name值，server端：spring.application.name
+    server-path: /elasticBg-server #@FeignClient path值，server端：server.servlet.context-path
+  env:
+    js-css-version-enabled: false #true：js css将使用对应的版本号，false：当前时间yyyyMMddhhmmss
+    js-version: 1.0.0
+    css-version: 1.0.0
+eureka:
+  client:
+    service-url:
+      defaultZone:  http://localhost:7000/eureka/
+    fetch-registry: true
+  instance:
+    lease-renewal-interval-in-seconds: 10 #每间隔多少s，向服务端发送一次心跳，证明自己依然”存活“
+    lease-expiration-duration-in-seconds: 20 # 告诉服务端，如果我多少s之内没有给你发心跳，将我踢出掉
+feign:
+  client:
+    config:
+      default:
+        connect-timeout: 10000 #超时设置
+        read-timeout: 10000 #超时设置

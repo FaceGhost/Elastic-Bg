@@ -3,7 +3,7 @@ Ext.onReady(function() {
 
     Ext.get('userInfoSetting').on('click',function(){
         var id = 'tab_id_userInfoSetting';
-        var url = 'system/system_userinfo';
+        var url = 'system/system_userinfo.htm';
         var title = '个人设置';
         if(!Ext.isEmpty(url)) {
             var p = Ext.getCmp(id);

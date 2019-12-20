@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: dev #环境
+  application:
+    name: elasticBg-client
+  mvc:
+    view:
+      suffix: .jsp
+      prefix: /WEB-INF/ui/
+    favicon:
+       enabled: false
+  main:
+    allow-bean-definition-overriding: true
+
+
+
+
+
+

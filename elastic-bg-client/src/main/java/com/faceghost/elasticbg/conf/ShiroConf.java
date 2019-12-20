@@ -111,11 +111,11 @@ public class ShiroConf {
         /**
          * 默认的登陆访问url
          */
-        shiroFilter.setLoginUrl("/login");
+        shiroFilter.setLoginUrl("/login.htm");
         /**
          * 登陆成功后跳转的url
          */
-        shiroFilter.setSuccessUrl("/main");
+        shiroFilter.setSuccessUrl("/main.htm");
 
 
         /**
@@ -126,7 +126,7 @@ public class ShiroConf {
         if(propConf.getLoginIDMaxSession() > 0){
             myFilters.put("kickout",new KickoutFilter(securityManager.getSessionManager(),
                     cacheManager,
-                    "/login",
+                    "/login.htm",
                     false,
                     propConf.getLoginIDMaxSession()
             ));
@@ -147,9 +147,14 @@ public class ShiroConf {
          */
         Map<String, String> hashMap = new LinkedHashMap<>();
         hashMap.put("/static/**", "anon");
-        hashMap.put("/sys/checkCode", "anon");
-        hashMap.put("/login", "anon");
-        hashMap.put("/**", "kickout,user");
+        hashMap.put("/sys/checkCode", "anon");//验证码
+        hashMap.put("/login.htm", "anon");//登录页面
+        hashMap.put("/execLogin", "anon");//ajax登录
+        if(propConf.getLoginIDMaxSession() > 0){
+            hashMap.put("/**", "kickout,user");
+        }else{
+            hashMap.put("/**", "user");
+        }
         shiroFilter.setFilterChainDefinitionMap(hashMap);
         return shiroFilter;
     }

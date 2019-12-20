@@ -46,7 +46,7 @@ Ext.onReady(function(){
                         success : function(form, data) {
                             if(data.result.success){
                                 myMask.hide();
-                                window.top.location.href = base + 'logout';
+                                window.top.location.href = base + 'logout.htm';
                             }else{
                                 Ext.Msg.alert('提示', data.result.msg);
                                 myMask.hide();
