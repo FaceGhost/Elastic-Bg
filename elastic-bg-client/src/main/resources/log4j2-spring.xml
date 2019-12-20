@@ -16,24 +16,6 @@
             <!--输出日志的格式-->
             <PatternLayout pattern="${pattern}"/>
         </console>
-
-        <!-- 这个会打印出所有的info及以下级别的信息，每次大小超过size，
-        则这size大小的日志会自动存入按年份-月份建立的文件夹下面并进行压缩，作为存档-->
-        <RollingFile name="RollingFileInfo" fileName="${sys:user.home}/logs/demo/info.log"
-                     filePattern="${sys:user.home}/logs/ElasticBg-Client/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log">
-            <Filters>
-                <!--控制台只输出level=INFO及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
-                <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
-            </Filters>
-            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy/>
-                <SizeBasedTriggeringPolicy size="100 MB"/>
-            </Policies>
-            <!-- DefaultRolloverStrategy属性如不设置，则默认为最多同一文件夹下7个文件，这里设置了20 -->
-            <DefaultRolloverStrategy max="20"/>
-        </RollingFile>
-
     </appenders>
     <!--定义logger-->
     <loggers>
@@ -48,15 +30,12 @@
         <logger name="io.grpc.netty" level="ERROR" additivity="false" />
         <logger name="org.quartz" level="ERROR" additivity="false" />
 
-
         <Logger name="com.faceghost.elasticbg" level="INFO" additivity="false">
             <appender-ref ref="Console"/>
-            <appender-ref ref="RollingFileInfo"/>
         </Logger>
 
         <root level="all">
             <appender-ref ref="Console"/>
-            <appender-ref ref="RollingFileInfo"/>
         </root>
     </loggers>
 

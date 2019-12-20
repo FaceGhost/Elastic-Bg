@@ -17,7 +17,6 @@
             <PatternLayout pattern="${pattern}"/>
         </console>
     </appenders>
-
     <!--定义logger-->
     <loggers>
         <!--过滤掉spring和hibernate的一些无用的debug信息-->
