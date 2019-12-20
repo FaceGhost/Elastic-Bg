@@ -1,4 +1,5 @@
-# Elastic-Bg
+# Elastic-Bg 分支（branch）:1.0.0
+# Elastic-Bg SpringCloud版 分支（branch）:2.0.0 
 
 ### Java前后端分离权限基础框架
 
@@ -18,9 +19,23 @@
 
 [ IDEA本地运行Elastic-Bg框架 ](https://faceghost.com/article/478001)
 
-#### V 1.0.0
 
 ##### 通用前后端分离权限管理系统,快速部署,应用于OA系统,客户关系管理系统，销售系统，公司内部系统等开发
+
+#### V 2.0.0
+
+##### 相关主要依赖版本
+
+- JDK1.8
+- Spring Boot 2.2
+- Spring-cloud Hoxton.RELEASE
+- shiro 1.4
+- Grpc
+- Extjs 4.2
+- Mysql 5.7
+
+
+#### V 1.0.0
 
 ##### 相关主要依赖版本
 
