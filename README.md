@@ -12,19 +12,7 @@
 
 - 密码：bg2019
 
-##### PS:演示系统为1.0.0版（2.0.0无演示系统），且为只读模式，同一账号最多允许20人同时访问（按照FIFO策略剔除）
-
-
-
-#### 本机快速运行
-SQL:[ 下载并创建数据库(elasticbg)，执行Sql ](https://github.com/FaceGhost/Elastic-Bg/tree/master/elastic-bg-server/src/main/resources/sql )
-
-GitHub:[ 下载并执行(java -jar elastic-bg-xx.jar) ](https://github.com/FaceGhost/Elastic-Bg/tree/master/demo/runJar.zip )
-
-Gitee:[ 下载并执行(java -jar elastic-bg-xx.jar) ](https://gitee.com/faceghost/Elastic-Bg/tree/master/demo/runJar.zip )
-
-
-##### 数据库默认localhost,用户名:root,密码：root,eureka端口:7000,server端口:8000,client端口:9000,访问地址:https://localhost:9000
+##### PS:演示系统为1.0.0版（2.0.0无演示系统，服务器支撑不起），且为只读模式，同一账号最多允许20人同时访问（按照FIFO策略剔除）
 
 
 #### 相关文章
