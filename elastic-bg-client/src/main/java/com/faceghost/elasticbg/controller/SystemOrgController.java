@@ -1,14 +1,12 @@
 package com.faceghost.elasticbg.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.faceghost.elasticbg.base.model.SystemOrg;
 import com.faceghost.elasticbg.base.statics.ErrorMsgConst;
 import com.faceghost.elasticbg.base.statics.LogType;
 import com.faceghost.elasticbg.base.utils.ExceptionUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
-import com.faceghost.elasticbg.base.vo.BaseVo;
-import com.faceghost.elasticbg.base.vo.ExtjsTreeVo;
-import com.faceghost.elasticbg.base.vo.PageVo;
-import com.faceghost.elasticbg.base.vo.SystemOrgVo;
+import com.faceghost.elasticbg.base.vo.*;
 import com.faceghost.elasticbg.controller.base.BaseController;
 import com.faceghost.elasticbg.service.SystemLogService;
 import com.faceghost.elasticbg.service.SystemOrgService;
@@ -55,40 +53,46 @@ public class SystemOrgController extends BaseController {
 			root.add(all);
 		}
 		try {
-			List<ExtjsTreeVo> listBean = systemOrgService.getSystemOrgTreeVoListBean();
-			if(listBean != null){
-				/**
-				 * 菜单
-				 */
-				for(ExtjsTreeVo bean: listBean){
-					if("0".equals(bean.getParentId())) {
-						root.add(bean);
-					}
-				}
-				for(ExtjsTreeVo bean : root ) {
-					List<ExtjsTreeVo> firstTmp = new ArrayList<ExtjsTreeVo>();
-					for(ExtjsTreeVo firstLeaf : listBean){
-						if(firstLeaf.getParentId().equals(bean.getId())) {
-							firstTmp.add(firstLeaf);
-							List<ExtjsTreeVo> secondTmp = new ArrayList<ExtjsTreeVo>();
-							for(ExtjsTreeVo secondLeaf : listBean ) {
-								if(secondLeaf.getParentId().equals(firstLeaf.getId())) {
-									secondTmp.add(secondLeaf);
-									List<ExtjsTreeVo> thirdTmp = new ArrayList<ExtjsTreeVo>();
-									for(ExtjsTreeVo thirdLeft : listBean) {
-										if(thirdLeft.getParentId().equals(secondLeaf.getId())) {
-											thirdTmp.add(thirdLeft);
-										}
-									}
-									secondLeaf.setChildren(thirdTmp);
-								}
-							}
-							firstLeaf.setChildren(secondTmp);
+			FeignResultVo R  = systemOrgService.getSystemOrgTreeVoListBean();
+			if(R.getSuccess()){
+				List<ExtjsTreeVo> listBean = JSONObject.parseArray(R.getData(),ExtjsTreeVo.class);
+				if(listBean != null){
+					/**
+					 * 菜单
+					 */
+					for(ExtjsTreeVo bean: listBean){
+						if("0".equals(bean.getParentId())) {
+							root.add(bean);
 						}
 					}
-					bean.setChildren(firstTmp);
+					for(ExtjsTreeVo bean : root ) {
+						List<ExtjsTreeVo> firstTmp = new ArrayList<ExtjsTreeVo>();
+						for(ExtjsTreeVo firstLeaf : listBean){
+							if(firstLeaf.getParentId().equals(bean.getId())) {
+								firstTmp.add(firstLeaf);
+								List<ExtjsTreeVo> secondTmp = new ArrayList<ExtjsTreeVo>();
+								for(ExtjsTreeVo secondLeaf : listBean ) {
+									if(secondLeaf.getParentId().equals(firstLeaf.getId())) {
+										secondTmp.add(secondLeaf);
+										List<ExtjsTreeVo> thirdTmp = new ArrayList<ExtjsTreeVo>();
+										for(ExtjsTreeVo thirdLeft : listBean) {
+											if(thirdLeft.getParentId().equals(secondLeaf.getId())) {
+												thirdTmp.add(thirdLeft);
+											}
+										}
+										secondLeaf.setChildren(thirdTmp);
+									}
+								}
+								firstLeaf.setChildren(secondTmp);
+							}
+						}
+						bean.setChildren(firstTmp);
+					}
 				}
+			}else{
+				log.error(String.format("执行：组织管理树形显示，异常：%s", R.getMsg()));
 			}
+
 		} catch (Exception e) {
 			log.error(String.format("执行：组织管理树形显示，异常：%s", ExceptionUtil.getExDetail(e)));
 		}
@@ -107,7 +111,12 @@ public class SystemOrgController extends BaseController {
 	public Object getSystemOrgPageVo(SystemOrgVo searchVo){
 		PageVo pageList = new PageVo();
 		try {
-			pageList  = systemOrgService.getSystemOrgPageVo(searchVo);
+			FeignResultVo R  = systemOrgService.getSystemOrgPageVo(searchVo);
+			if(R.getSuccess()){
+				pageList = JSONObject.parseObject(R.getData(),PageVo.class);
+			}else{
+				log.error(String.format("执行：组织管理分页显示，异常：%s",R.getMsg()));
+			}
 		} catch (Exception e) {
 			log.error(String.format("执行：组织管理分页显示，异常：%s",ExceptionUtil.getExDetail(e)));
 		}
@@ -130,36 +139,42 @@ public class SystemOrgController extends BaseController {
 			root.add(all);
 		}
 		try {
-			List<ExtjsTreeVo> listBean = systemOrgService.getSystemOrgTreeVoForNotLow();
-			if(listBean != null){
-				for(ExtjsTreeVo bean: listBean){
-					if( "0".equals(bean.getParentId())) {
-						root.add(bean);
-					}
-				}
-				/**
-				 * 菜单
-				 */
-				for(ExtjsTreeVo bean : root ) {
-					List<ExtjsTreeVo> firstTmp = new ArrayList<ExtjsTreeVo>();
-					for(ExtjsTreeVo firstLeaf : listBean){
-						if(firstLeaf.getParentId().equals(bean.getId())) {
-							firstTmp.add(firstLeaf);
-							
-							List<ExtjsTreeVo> secondTmp = new ArrayList<ExtjsTreeVo>();
-							
-							for(ExtjsTreeVo secondLeaf : listBean ) {
-								if(secondLeaf.getParentId().equals(firstLeaf.getId())) {
-									secondTmp.add(secondLeaf);
-								}
-							}
-							firstLeaf.setChildren(secondTmp);
+			FeignResultVo R = systemOrgService.getSystemOrgTreeVoForNotLow();
+			if(R.getSuccess()){
+				List<ExtjsTreeVo> listBean = JSONObject.parseArray(R.getData(),ExtjsTreeVo.class);
+				if(listBean != null){
+					for(ExtjsTreeVo bean: listBean){
+						if( "0".equals(bean.getParentId())) {
+							root.add(bean);
 						}
 					}
-					
-					bean.setChildren(firstTmp);
+					/**
+					 * 菜单
+					 */
+					for(ExtjsTreeVo bean : root ) {
+						List<ExtjsTreeVo> firstTmp = new ArrayList<ExtjsTreeVo>();
+						for(ExtjsTreeVo firstLeaf : listBean){
+							if(firstLeaf.getParentId().equals(bean.getId())) {
+								firstTmp.add(firstLeaf);
+
+								List<ExtjsTreeVo> secondTmp = new ArrayList<ExtjsTreeVo>();
+
+								for(ExtjsTreeVo secondLeaf : listBean ) {
+									if(secondLeaf.getParentId().equals(firstLeaf.getId())) {
+										secondTmp.add(secondLeaf);
+									}
+								}
+								firstLeaf.setChildren(secondTmp);
+							}
+						}
+
+						bean.setChildren(firstTmp);
+					}
 				}
+			}else{
+				log.error(String.format("执行：新增或修改-上级组织管理树形显示，异常：%s",R.getMsg()));
 			}
+
 		} catch (Exception e) {
 			log.error(String.format("执行：新增或修改-上级组织管理树形显示，异常：%s",ExceptionUtil.getExDetail(e)));
 		}
@@ -200,7 +215,12 @@ public class SystemOrgController extends BaseController {
 			}
 			//默认全部不展开
 			bean.setIsAutoExpand("1");
-			bean = systemOrgService.execAddSystemOrg(bean);
+			FeignResultVo R = systemOrgService.execAddSystemOrg(bean);
+			if(!R.getSuccess()){
+				vo.setMsg(R.getMsg());
+				return vo;
+			}
+			bean = JSONObject.parseObject(R.getData(),SystemOrg.class);
 			if(bean.getId() != null) {
 				vo.setSuccess(Boolean.TRUE);
 				vo.setMsg("");
@@ -217,25 +237,18 @@ public class SystemOrgController extends BaseController {
 						);
 			}
 		}catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s",methodName,ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getId()),
-								clazzName,
-								operName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
-
-			}
+			log.error(String.format("执行：%s，异常：%s",methodName,ExceptionUtil.getExDetail(e)));
+			systemLogService.saveLog
+					(
+							LogType.EX.getType(),
+							getLoginUser().getId(),
+							ExceptionUtil.getExDetail_log(e),
+							String.valueOf(bean.getId()),
+							clazzName,
+							operName,
+							IPUtil.getInnerIpAddress(request),
+							IPUtil.getOuterIpAddress(request)
+					);
 		}
 		return vo;
     }
@@ -272,7 +285,12 @@ public class SystemOrgController extends BaseController {
 			}
 			//级默认全部不展开
 			bean.setIsAutoExpand("1");
-			bean = systemOrgService.execAddSystemOrg(bean);
+			FeignResultVo R = systemOrgService.execAddSystemOrg(bean);
+			if(!R.getSuccess()){
+				vo.setMsg(R.getMsg());
+				return vo;
+			}
+			bean = JSONObject.parseObject(R.getData(),SystemOrg.class);
 			vo.setSuccess(Boolean.TRUE);
 			vo.setMsg("");
 			systemLogService.saveLog
@@ -287,24 +305,18 @@ public class SystemOrgController extends BaseController {
 							IPUtil.getOuterIpAddress(request)
 					);
 		}catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s",operName,ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
-			}
+			log.error(String.format("执行：%s，异常：%s",operName,ExceptionUtil.getExDetail(e)));
+			systemLogService.saveLog
+					(
+							LogType.EX.getType(),
+							getLoginUser().getId(),
+							ExceptionUtil.getExDetail_log(e),
+							String.valueOf(bean.getId()),
+							clazzName,
+							methodName,
+							IPUtil.getInnerIpAddress(request),
+							IPUtil.getOuterIpAddress(request)
+					);
 		}
 		return vo;
 	}
@@ -326,8 +338,12 @@ public class SystemOrgController extends BaseController {
 				vo.setMsg(ErrorMsgConst.errParam);
 				return vo;
 			}
-			SystemOrgVo data = systemOrgService.getPreExecAddSystemOrgData(bean.getId());
-			vo.setData(data);
+			FeignResultVo R = systemOrgService.getPreExecAddSystemOrgData(bean.getId());
+			if(!R.getSuccess()) {
+				vo.setMsg(R.getMsg());
+				return vo;
+			}
+			vo.setData(JSONObject.parseObject(R.getData(),SystemOrgVo.class));
 			vo.setSuccess(Boolean.TRUE);
 			vo.setMsg("");
 		}catch (Exception e) {

@@ -27,7 +27,7 @@
 		.layout_bottom_div {color: #6699CC;padding-right: 10px;padding-top: 1px;text-align: center;width: 100%;position: absolute;right: 0px;top: 0px;}
   </style>
   </head>
-  <body>
+  <body id="body">
 	 	 <div id="loading-mask" style=""></div>
 		 <div id="loading">
 	        <div class="loading-indicator">
@@ -36,7 +36,7 @@
 	        </div>
 	     </div>
 		 <div id="div_center">
-			<iframe id="iframe_main" src="${base}welcome.htm" width="100%" height="100%" style="min-height:500px;" frameborder="0" ></iframe>
+			<iframe id="iframe_main" name="iframe_main" src="${base}welcome.htm"  style="padding: 0px; width: 100%; " frameborder="0" ></iframe>
 		</div>
 		
 			<div id="layout_top_div" class="layout_top_div" >
@@ -78,6 +78,11 @@
 			}
 		});
 		var base = '${base}';
+        window.onload = function(){
+            var  welcomeIframe =document.getElementById('iframe_main');
+            welcomeIframe.height=document.getElementById("body").offsetHeight-100;
+		}
+
 	</script>
 	<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading 初始化 ...';</script>
     <script type="text/javascript" src="${base}static/uijs/viewport.js?v=<%=JsCssVersionConst.getJsVersion()%>"></script>

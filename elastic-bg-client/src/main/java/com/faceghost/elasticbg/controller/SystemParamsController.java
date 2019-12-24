@@ -1,11 +1,13 @@
 package com.faceghost.elasticbg.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.faceghost.elasticbg.base.model.SystemParams;
 import com.faceghost.elasticbg.base.statics.ErrorMsgConst;
 import com.faceghost.elasticbg.base.statics.LogType;
 import com.faceghost.elasticbg.base.utils.ExceptionUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
 import com.faceghost.elasticbg.base.vo.BaseVo;
+import com.faceghost.elasticbg.base.vo.FeignResultVo;
 import com.faceghost.elasticbg.base.vo.PageVo;
 import com.faceghost.elasticbg.base.vo.SystemParamsVo;
 import com.faceghost.elasticbg.controller.base.BaseController;
@@ -49,7 +51,10 @@ public class SystemParamsController extends BaseController {
 	public Object getSystemParamsPageVo(SystemParamsVo searchVo){
 		PageVo pageList = new PageVo();
 		try {
-			pageList  = systemParamsService.getSystemParamsPageVo(searchVo);
+			FeignResultVo R = systemParamsService.getSystemParamsPageVo(searchVo);
+			if(R.getSuccess()){
+				pageList = JSONObject.parseObject(R.getData(),PageVo.class);
+			}
 		} catch (Exception e) {
 			log.error(String.format("执行：系统参数管理-分页显示，异常：%s",ExceptionUtil.getExDetail(e)));
 		}
@@ -70,10 +75,13 @@ public class SystemParamsController extends BaseController {
 	public BaseVo execAddSystemParams(SystemParams bean, String statusStr){
 		String methodName = "execAddSystemParams";
 		String operName = "系统参数管理-新增";
+
 		BaseVo vo = new BaseVo();
 		vo.setSuccess(Boolean.FALSE);
 		vo.setMsg(ErrorMsgConst.errOperFail);
+
 		try {
+
 			if(ValidateUtil.validateBlank(bean.getType())
 					|| ValidateUtil.validateBlank(bean.getParam())
 					|| ValidateUtil.validateBlank(bean.getValue())) {
@@ -89,7 +97,12 @@ public class SystemParamsController extends BaseController {
 				bean.setStatus((byte)0);
 			}
 
-			bean = systemParamsService.execAddSystemParams(bean);
+			FeignResultVo R = systemParamsService.execAddSystemParams(bean);
+			if(!R.getSuccess()){
+			    vo.setMsg(R.getMsg());
+				return vo;
+			}
+            bean = JSONObject.parseObject(R.getData(),SystemParams.class);
 			if(bean.getId() != null) {
 				vo.setSuccess(Boolean.TRUE);
 				vo.setMsg("");
@@ -106,25 +119,18 @@ public class SystemParamsController extends BaseController {
 						);
 			}
 		}catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
-			}
-
+            log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
+            systemLogService.saveLog
+                    (
+                            LogType.EX.getType(),
+                            getLoginUser().getId(),
+                            ExceptionUtil.getExDetail_log(e),
+                            String.valueOf(bean.getId()),
+                            clazzName,
+                            methodName,
+                            IPUtil.getInnerIpAddress(request),
+                            IPUtil.getOuterIpAddress(request)
+                    );
 		}
 		return vo;
     }
@@ -160,7 +166,13 @@ public class SystemParamsController extends BaseController {
 				bean.setStatus((byte)0);
 			}
 
-			bean = systemParamsService.execAddSystemParams(bean);
+            FeignResultVo R = systemParamsService.execAddSystemParams(bean);
+			if(!R.getSuccess()){
+			    vo.setMsg(R.getMsg());
+			    return vo;
+            }
+
+            bean = JSONObject.parseObject(R.getData(),SystemParams.class);
 			vo.setSuccess(Boolean.TRUE);
 			vo.setMsg("");
 			systemLogService.saveLog
@@ -175,26 +187,18 @@ public class SystemParamsController extends BaseController {
 							IPUtil.getOuterIpAddress(request)
 					);
 		}catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
-
-			}
-
+            log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
+            systemLogService.saveLog
+                    (
+                            LogType.EX.getType(),
+                            getLoginUser().getId(),
+                            ExceptionUtil.getExDetail_log(e),
+                            String.valueOf(bean.getId()),
+                            clazzName,
+                            methodName,
+                            IPUtil.getInnerIpAddress(request),
+                            IPUtil.getOuterIpAddress(request)
+                    );
 		}
 		return vo;
 	}
@@ -216,8 +220,12 @@ public class SystemParamsController extends BaseController {
 				vo.setMsg(ErrorMsgConst.errParam);
 				return vo;
 			}
-			SystemParamsVo data = systemParamsService.preExecAddSystemParams(bean.getId());
-			vo.setData(data);
+			FeignResultVo R = systemParamsService.preExecAddSystemParams(bean.getId());
+			if(!R.getSuccess()){
+			    vo.setMsg(R.getMsg());
+			    return vo;
+            }
+			vo.setData(JSONObject.parseObject(R.getData(),SystemParamsVo.class));
 			vo.setSuccess(Boolean.TRUE);
 			vo.setMsg("");
 		}catch (Exception e) {

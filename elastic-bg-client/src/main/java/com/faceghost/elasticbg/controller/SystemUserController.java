@@ -1,14 +1,13 @@
 package com.faceghost.elasticbg.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.faceghost.elasticbg.base.exception.BusiException;
 import com.faceghost.elasticbg.base.model.SystemUser;
 import com.faceghost.elasticbg.base.statics.ErrorMsgConst;
 import com.faceghost.elasticbg.base.statics.LogType;
 import com.faceghost.elasticbg.base.utils.ExceptionUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
-import com.faceghost.elasticbg.base.vo.BaseVo;
-import com.faceghost.elasticbg.base.vo.ExtjsCheckTreeVo;
-import com.faceghost.elasticbg.base.vo.PageVo;
-import com.faceghost.elasticbg.base.vo.SystemUserVo;
+import com.faceghost.elasticbg.base.vo.*;
 import com.faceghost.elasticbg.controller.base.BaseController;
 import com.faceghost.elasticbg.service.SystemLogService;
 import com.faceghost.elasticbg.service.SystemUserService;
@@ -54,7 +53,12 @@ public class SystemUserController  extends BaseController {
 	public Object getSystemUserPageVo(SystemUserVo searchVo){
 		PageVo pageList = new PageVo();
 		try {
-			pageList = systemUserService.getSystemUserPageVo(searchVo);
+			FeignResultVo R = systemUserService.getSystemUserPageVo(searchVo);
+			if(R.getSuccess()){
+				pageList = JSONObject.parseObject(R.getData(),PageVo.class);
+			}else{
+				log.error(String.format("执行：用户管理-分页显示，异常：%s", R.getMsg()));
+			}
 		} catch (Exception e) {
 			log.error(String.format("执行：用户管理-分页显示，异常：%s", ExceptionUtil.getExDetail(e)));
 		}
@@ -110,7 +114,12 @@ public class SystemUserController  extends BaseController {
 			}else {
 				bean.setStatus((byte)0);
 			}
-			bean =  systemUserService.execAddSystemUser(bean,userRoles);
+			FeignResultVo R =  systemUserService.execAddSystemUser(bean,userRoles);
+			if(R.getSuccess()){
+				bean =  JSONObject.parseObject(R.getData(),SystemUser.class);
+			}else{
+				throw  new BusiException(R.getMsg());
+			}
 			if(!ValidateUtil.validateBlank(bean.getId())) {
 				vo.setSuccess(Boolean.TRUE);
 				systemLogService.saveLog
@@ -127,25 +136,19 @@ public class SystemUserController  extends BaseController {
 			}
 
 		}catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
+			log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
+			systemLogService.saveLog
+					(
+							LogType.EX.getType(),
+							getLoginUser().getId(),
+							ExceptionUtil.getExDetail_log(e),
+							String.valueOf(bean.getId()),
+							clazzName,
+							methodName,
+							IPUtil.getInnerIpAddress(request),
+							IPUtil.getOuterIpAddress(request)
+					);
 
-			}
 		}
 		return vo;
     }
@@ -182,7 +185,12 @@ public class SystemUserController  extends BaseController {
 			}else {
 				bean.setStatus((byte)0);
 			}
-			bean =  systemUserService.execAddSystemUser(bean,userRoles);
+			FeignResultVo R =  systemUserService.execAddSystemUser(bean,userRoles);
+			if(R.getSuccess()){
+				bean =   JSONObject.parseObject(R.getData(),SystemUser.class);
+			}else{
+				throw  new BusiException(R.getMsg());
+			}
 			vo.setSuccess(Boolean.TRUE);
 			vo.setMsg("");
 			systemLogService.saveLog
@@ -198,24 +206,18 @@ public class SystemUserController  extends BaseController {
 					);
 
 		}catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s",operName,ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
-			}
+			log.error(String.format("执行：%s，异常：%s",operName,ExceptionUtil.getExDetail(e)));
+			systemLogService.saveLog
+					(
+							LogType.EX.getType(),
+							getLoginUser().getId(),
+							ExceptionUtil.getExDetail_log(e),
+							String.valueOf(bean.getId()),
+							clazzName,
+							methodName,
+							IPUtil.getInnerIpAddress(request),
+							IPUtil.getOuterIpAddress(request)
+					);
 
 		}
 		return vo;
@@ -238,10 +240,15 @@ public class SystemUserController  extends BaseController {
 				vo.setMsg(ErrorMsgConst.errParam);
 				return vo;
 			}
-			SystemUserVo data = systemUserService.preExecOperSystemUser(bean.getId());
-			vo.setData(data);
-			vo.setSuccess(Boolean.TRUE);
-			vo.setMsg("");
+			FeignResultVo R = systemUserService.preExecOperSystemUser(bean.getId());
+			if(R.getSuccess()){
+				vo.setData( JSONObject.parseObject(R.getData(),SystemUserVo.class));
+				vo.setSuccess(Boolean.TRUE);
+				vo.setMsg("");
+			}else{
+				throw  new BusiException(R.getMsg());
+			}
+
 		}catch (Exception e) {
 			log.error(String.format("执行：用户管理-新修改用户 获取原数据，异常：%s", ExceptionUtil.getExDetail(e)));
 		}
@@ -268,40 +275,30 @@ public class SystemUserController  extends BaseController {
 				vo.setMsg(ErrorMsgConst.errParam);
 				return vo;
 			}
-			systemUserService.resetSystemUserPwd(id);
-			vo.setSuccess(Boolean.TRUE);
-			vo.setMsg("");
-			systemLogService.saveLog
-					(
-							LogType.BUSI.getType(),
-							getLoginUser().getId(),
-							"执行：" + operName,
-							id,
-						 	clazzName,
-							methodName,
-							IPUtil.getInnerIpAddress(request),
-							IPUtil.getOuterIpAddress(request)
-					);
-		}catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s", operName,ExceptionUtil.getExDetail(e)));
+			FeignResultVo R = systemUserService.resetSystemUserPwd(id);
+			if(R.getSuccess()){
+				vo.setSuccess(Boolean.TRUE);
+				vo.setMsg("");
 				systemLogService.saveLog
 						(
-								LogType.EX.getType(),
+								LogType.BUSI.getType(),
 								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
+								"执行：" + operName,
 								id,
 								clazzName,
 								methodName,
 								IPUtil.getInnerIpAddress(request),
 								IPUtil.getOuterIpAddress(request)
 						);
-
+			}else{
+				throw  new BusiException(R.getMsg());
 			}
+
+		}catch(BusiException e){
+			vo.setMsg(e.getMessage());
+		}catch (Exception e) {
+
+
 		}
 		return vo;
 	}
@@ -334,7 +331,12 @@ public class SystemUserController  extends BaseController {
 				return vo;
 			}else{
 
-				bean = systemUserService.getSystemUserByUserName(getLoginUser().getName());
+				FeignResultVo R = systemUserService.getSystemUserByUserName(getLoginUser().getName());
+				if(R.getSuccess()){
+					bean =   JSONObject.parseObject(R.getData(),SystemUser.class);
+				}else{
+					throw new BusiException(R.getMsg());
+				}
 				if(bean == null){
 					vo.setMsg("未查询到当前登录的相关信息！");
 					return vo;
@@ -346,8 +348,8 @@ public class SystemUserController  extends BaseController {
 				}
 				bean.setPassword(newPwd);
 				passwordUtil.systemUserEncryptPassword(bean);
-				int eff = systemUserService.updateBean(bean);
-				if(eff > 0){
+				FeignResultVo effR = systemUserService.updateBean(bean);
+				if(effR.getSuccess()){
 					vo.setSuccess(Boolean.TRUE);
 					vo.setMsg("");
 					systemLogService.saveLog
@@ -361,28 +363,25 @@ public class SystemUserController  extends BaseController {
 									IPUtil.getInnerIpAddress(request),
 									IPUtil.getOuterIpAddress(request)
 							);
+				}else{
+					throw  new BusiException(effR.getMsg());
 				}
+
 			}
 
 		} catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s", operName,ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
-			}
+			log.error(String.format("执行：%s，异常：%s", operName,ExceptionUtil.getExDetail(e)));
+			systemLogService.saveLog
+					(
+							LogType.EX.getType(),
+							getLoginUser().getId(),
+							ExceptionUtil.getExDetail_log(e),
+							String.valueOf(bean.getId()),
+							clazzName,
+							methodName,
+							IPUtil.getInnerIpAddress(request),
+							IPUtil.getOuterIpAddress(request)
+					);
 		}
 		return vo;
 	}
@@ -408,8 +407,8 @@ public class SystemUserController  extends BaseController {
 			}
 			bean.setUpdateT(new Date());
 			bean.setUpdateU(getLoginUser().getId());
-			int eff =  systemUserService.updateBean(bean);
-			if(eff > 0) {
+			FeignResultVo  R =  systemUserService.updateBean(bean);
+			if(R.getSuccess()){
 				vo.setSuccess(Boolean.TRUE);
 				vo.setMsg("");
 				systemLogService.saveLog
@@ -423,26 +422,23 @@ public class SystemUserController  extends BaseController {
 								IPUtil.getInnerIpAddress(request),
 								IPUtil.getOuterIpAddress(request)
 						);
-			}
-		}catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
 			}else{
-				log.error(String.format("执行：%s，异常：%s", operName,ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
+				throw  new BusiException(R.getMsg());
 			}
+
+		}catch (Exception e) {
+			log.error(String.format("执行：%s，异常：%s", operName,ExceptionUtil.getExDetail(e)));
+			systemLogService.saveLog
+					(
+							LogType.EX.getType(),
+							getLoginUser().getId(),
+							ExceptionUtil.getExDetail_log(e),
+							String.valueOf(bean.getId()),
+							clazzName,
+							methodName,
+							IPUtil.getInnerIpAddress(request),
+							IPUtil.getOuterIpAddress(request)
+					);
 		}
 		return vo;
 	}

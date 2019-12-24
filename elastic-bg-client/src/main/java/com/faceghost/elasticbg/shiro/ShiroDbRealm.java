@@ -1,8 +1,11 @@
 package com.faceghost.elasticbg.shiro;
 
+import com.alibaba.fastjson.JSONObject;
+import com.faceghost.elasticbg.base.exception.BusiException;
 import com.faceghost.elasticbg.base.model.SystemUser;
 import com.faceghost.elasticbg.base.shiro.ShiroUser;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
+import com.faceghost.elasticbg.base.vo.FeignResultVo;
 import com.faceghost.elasticbg.base.vo.SystemPermissionVo;
 import com.faceghost.elasticbg.base.vo.SystemRoleVo;
 import com.faceghost.elasticbg.service.SystemPermissionService;
@@ -45,7 +48,13 @@ public class ShiroDbRealm extends AuthorizingRealm {
 
         //登录用户名
         String  username = (String) token.getUsername();
-        SystemUser bean = systemUserService.getSystemUserByUserName(username);
+        SystemUser bean = null;
+        FeignResultVo R = systemUserService.getSystemUserByUserName(username);
+        if(R.getSuccess()){
+            bean =   JSONObject.parseObject(R.getData(),SystemUser.class);
+        }else{
+            throw new BusiException(R.getMsg());
+        }
         if(bean == null){
             throw new UnknownAccountException();//没有找到账户
         }else if(ValidateUtil.validateBlank(bean.getStatus()+"") || bean.getStatus() == 0){
@@ -75,33 +84,51 @@ public class ShiroDbRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         ShiroUser shiroUser = (ShiroUser) principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        SystemUser bean = systemUserService.getSystemUserByUserName(shiroUser.getName());
+        SystemUser bean = null;
+        FeignResultVo R = systemUserService.getSystemUserByUserName(shiroUser.getName());
+        if(R.getSuccess()){
+            bean = JSONObject.parseObject(R.getData(),SystemUser.class);
+        }else{
+            throw  new BusiException(R.getMsg());
+        }
         if(bean != null){
             Set<String> roles = new HashSet<String>();
             Set<String> permissions = new HashSet<String>();
             List<Integer> rolesIds = new ArrayList<Integer>();
             //角色集合
-            List<SystemRoleVo> listRole = systemRoleService.findRolesBySystemUserId(bean.getId());
-            if(listRole != null && !listRole.isEmpty()){
-                for(SystemRoleVo sr : listRole){
-                    String name = sr.getName();
-                    roles.add(name);
-                    rolesIds.add(sr.getId());
+            FeignResultVo RR = systemRoleService.findRolesBySystemUserId(bean.getId());
+            if(RR.getSuccess()){
+                List<SystemRoleVo> listRole = JSONObject.parseArray(RR.getData(),SystemRoleVo.class);
+                if(listRole != null && !listRole.isEmpty()){
+                    for(SystemRoleVo sr : listRole){
+                        String name = sr.getName();
+                        roles.add(name);
+                        rolesIds.add(sr.getId());
+                    }
                 }
+                authorizationInfo.setRoles(roles);
+            }else{
+                log.error("登录获取用户所属角色异常：%s",RR.getMsg());
             }
-            authorizationInfo.setRoles(roles);
 
             if(!roles.isEmpty()){
                 //权限集合
-                List<SystemPermissionVo> listSystemPermissions =  systemPermissionService.findPermissionBySystemRoleIds(rolesIds);
-                if(listSystemPermissions != null && !listSystemPermissions.isEmpty()){
-                    for(SystemPermissionVo sp : listSystemPermissions){
-                        if(!ValidateUtil.validateBlank(sp.getPermission())){
-                            permissions.add(sp.getPermission());
+                FeignResultVo PR =  systemPermissionService.findPermissionBySystemRoleIds(rolesIds);
+                if(PR.getSuccess()){
+                    List<SystemPermissionVo> listSystemPermissions = JSONObject.parseArray(PR.getData(),SystemPermissionVo.class);
+                    if(listSystemPermissions != null && !listSystemPermissions.isEmpty()){
+                        for(SystemPermissionVo sp : listSystemPermissions){
+                            if(!ValidateUtil.validateBlank(sp.getPermission())){
+                                permissions.add(sp.getPermission());
+                            }
                         }
                     }
+                    authorizationInfo.setStringPermissions(permissions);
+                }else{
+                    log.error("登录获取用户所属权限异常：%s",PR.getMsg());
                 }
-                authorizationInfo.setStringPermissions(permissions);
+
+
             }
         }else{
             authorizationInfo.setRoles(null);

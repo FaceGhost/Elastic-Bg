@@ -52,10 +52,12 @@ public class TransactionAop {
                 ignore.add("updateByLogin");
                 ignore.add("saveLog");
                 if(!ignore.contains(method_)){
-                    throw new BusiException("@@操作受限：当前系统正在以【只读】模式运行！");
+                    throw new BusiException("操作受限：当前系统正在以【只读】模式运行！");
                 }
 
             }
+
+
         }
 
 

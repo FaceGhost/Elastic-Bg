@@ -1,8 +1,7 @@
 package com.faceghost.elasticbg.service;
 
 import com.faceghost.elasticbg.base.model.SystemPermission;
-import com.faceghost.elasticbg.base.vo.ExtjsTreeVo;
-import com.faceghost.elasticbg.base.vo.PageVo;
+import com.faceghost.elasticbg.base.vo.FeignResultVo;
 import com.faceghost.elasticbg.base.vo.SystemPermissionVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}")
+@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}/systemPermission")
 public interface SystemPermissionService {
 
 	/**
@@ -21,7 +20,7 @@ public interface SystemPermissionService {
 	 * @return
 	 */
 	@RequestMapping(value = "/findPermissionBySystemRoleIds",method = RequestMethod.POST)
-	List<SystemPermissionVo> findPermissionBySystemRoleIds(@RequestParam("rolesIds") List<Integer> rolesIds);
+	FeignResultVo findPermissionBySystemRoleIds(@RequestParam("rolesIds") List<Integer> rolesIds);
 
 	
 	/**
@@ -30,7 +29,7 @@ public interface SystemPermissionService {
 	 * @return
 	 */
 	@RequestMapping(value = "/getSystemUserPermission",method = RequestMethod.POST)
-	List<ExtjsTreeVo> getSystemUserPermission(@RequestParam("uid") String uid) throws Exception;
+	FeignResultVo getSystemUserPermission(@RequestParam("uid") String uid);
 
 	/**
 	 * 权限配置-分页显示
@@ -39,7 +38,7 @@ public interface SystemPermissionService {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getSystemPermissionPageVo",method = RequestMethod.POST)
-	PageVo getSystemPermissionPageVo(@RequestBody SystemPermissionVo searchVo) throws Exception;
+	FeignResultVo getSystemPermissionPageVo(@RequestBody SystemPermissionVo searchVo);
 
 
 	/**
@@ -48,7 +47,7 @@ public interface SystemPermissionService {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getSystemPermissionTreeVoForNotLow",method = RequestMethod.POST)
-    List<ExtjsTreeVo> getSystemPermissionTreeVoForNotLow() throws Exception;
+	FeignResultVo getSystemPermissionTreeVoForNotLow();
 
 
 	/**
@@ -57,7 +56,7 @@ public interface SystemPermissionService {
 	 * @return
 	 */
 	@RequestMapping(value = "/execAddSystemPerm",method = RequestMethod.POST)
-	SystemPermission execAddSystemPerm(@RequestBody SystemPermission bean) throws Exception;
+	FeignResultVo execAddSystemPerm(@RequestBody SystemPermission bean);
 
 	
 	/**
@@ -66,7 +65,7 @@ public interface SystemPermissionService {
 	 * @return
 	 */
 	@RequestMapping(value = "/getSystemPermssionById",method = RequestMethod.POST)
-	SystemPermission getSystemPermssionById(@RequestParam("id") Integer id);
+	FeignResultVo getSystemPermssionById(@RequestParam("id") Integer id);
 
 
 	/**
@@ -75,7 +74,7 @@ public interface SystemPermissionService {
 	 * @return
 	 */
 	@RequestMapping(value = "/preExecAddSystemOrg",method = RequestMethod.POST)
-	SystemPermissionVo preExecAddSystemOrg(@RequestParam("id") Integer id);
+	FeignResultVo preExecAddSystemOrg(@RequestParam("id") Integer id);
 
 	/**
 	 * 根据pId查询
@@ -83,7 +82,6 @@ public interface SystemPermissionService {
 	 * @return
 	 */
 	@RequestMapping(value = "/getBeanVoByPid",method = RequestMethod.POST)
-	List<SystemPermissionVo> getBeanVoByPid(@RequestParam("pId") String pId);
+	FeignResultVo getBeanVoByPid(@RequestParam("pId") String pId);
 
-	
 }

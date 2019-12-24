@@ -1,5 +1,6 @@
 package com.faceghost.elasticbg.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.faceghost.elasticbg.base.model.SystemOrg;
 import com.faceghost.elasticbg.base.model.SystemRole;
 import com.faceghost.elasticbg.base.model.SystemRolePermission;
@@ -7,10 +8,7 @@ import com.faceghost.elasticbg.base.statics.ErrorMsgConst;
 import com.faceghost.elasticbg.base.statics.LogType;
 import com.faceghost.elasticbg.base.utils.ExceptionUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
-import com.faceghost.elasticbg.base.vo.BaseVo;
-import com.faceghost.elasticbg.base.vo.ExtjsCheckTreeVo;
-import com.faceghost.elasticbg.base.vo.PageVo;
-import com.faceghost.elasticbg.base.vo.SystemRoleVo;
+import com.faceghost.elasticbg.base.vo.*;
 import com.faceghost.elasticbg.controller.base.BaseController;
 import com.faceghost.elasticbg.service.SystemLogService;
 import com.faceghost.elasticbg.service.SystemRolePermissionService;
@@ -58,7 +56,10 @@ public class SystemRoleController  extends BaseController {
 	public Object getSystemRolePageVo(SystemRoleVo searchVo){
 		PageVo pageList = new PageVo();
 		try {
-			pageList = systemRoleService.getSystemRolePageVo(searchVo);
+			FeignResultVo R = systemRoleService.getSystemRolePageVo(searchVo);
+			if(R.getSuccess()){
+				pageList = JSONObject.parseObject(R.getData(),PageVo.class);
+			}
 		} catch (Exception e) {
 			log.error(String.format("执行：角色管理-分页显示，异常：%s", ExceptionUtil.getExDetail(e)));
 		}
@@ -94,7 +95,12 @@ public class SystemRoleController  extends BaseController {
 				bean.setStatus((byte)0);
 			}
 			
-			 bean = systemRoleService.execAddSystemRole(bean);
+			FeignResultVo R = systemRoleService.execAddSystemRole(bean);
+			if(!R.getSuccess()){
+				vo.setMsg(R.getMsg());
+				return vo;
+			}
+			bean = JSONObject.parseObject(R.getData(),SystemRole.class);
 			if(bean.getId() != null) {
 				vo.setSuccess(Boolean.TRUE);
 				vo.setMsg("");
@@ -111,25 +117,18 @@ public class SystemRoleController  extends BaseController {
 						);
 			}
 		}catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
-
-			}
+			log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
+			systemLogService.saveLog
+					(
+							LogType.EX.getType(),
+							getLoginUser().getId(),
+							ExceptionUtil.getExDetail_log(e),
+							String.valueOf(bean.getId()),
+							clazzName,
+							methodName,
+							IPUtil.getInnerIpAddress(request),
+							IPUtil.getOuterIpAddress(request)
+					);
 		}
 		return vo;
     }
@@ -161,7 +160,12 @@ public class SystemRoleController  extends BaseController {
 				bean.setStatus((byte)0);
 			}
 
-			bean = systemRoleService.execAddSystemRole(bean);
+			FeignResultVo R = systemRoleService.execAddSystemRole(bean);
+			if(!R.getSuccess()){
+				vo.setMsg(R.getMsg());
+				return vo;
+			}
+			bean = JSONObject.parseObject(R.getData(),SystemRole.class);
 			vo.setSuccess(Boolean.TRUE);
 			vo.setMsg("");
 			systemLogService.saveLog
@@ -176,25 +180,18 @@ public class SystemRoleController  extends BaseController {
 							IPUtil.getOuterIpAddress(request)
 					);
 		}catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
-
-			}
+			log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
+			systemLogService.saveLog
+					(
+							LogType.EX.getType(),
+							getLoginUser().getId(),
+							ExceptionUtil.getExDetail_log(e),
+							String.valueOf(bean.getId()),
+							clazzName,
+							methodName,
+							IPUtil.getInnerIpAddress(request),
+							IPUtil.getOuterIpAddress(request)
+					);
 		}
 		return vo;
 	}
@@ -216,8 +213,12 @@ public class SystemRoleController  extends BaseController {
 				vo.setMsg(ErrorMsgConst.errParam);
 				return vo;
 			}
-			SystemRoleVo data = systemRoleService.preExecAddSystemRole(bean.getId());
-			vo.setData(data);
+			FeignResultVo R = systemRoleService.preExecAddSystemRole(bean.getId());
+			if(!R.getSuccess()){
+				vo.setMsg(R.getMsg());
+				return vo;
+			}
+			vo.setData(JSONObject.parseObject(R.getData(),SystemRoleVo.class));
 			vo.setSuccess(Boolean.TRUE);
 			vo.setMsg("");
 		}catch (Exception e) {
@@ -236,40 +237,44 @@ public class SystemRoleController  extends BaseController {
 	public Object systemRolePermOperPre(Integer roleId){
 		List<ExtjsCheckTreeVo> root = new ArrayList<ExtjsCheckTreeVo>();
 		try {
-			List<ExtjsCheckTreeVo> listBean = systemRoleService.systemRolePermOperPre(roleId);
-			if(listBean != null){
-				for(ExtjsCheckTreeVo bean: listBean){
-					if( "1".equals(bean.getParentId())) {
-						root.add(bean);
-					}
-				}
-				/**
-				 * 菜单
-				 */
-				for(ExtjsCheckTreeVo bean : root ) {
-					List<ExtjsCheckTreeVo> firstTmp = new ArrayList<ExtjsCheckTreeVo>();
-					for(ExtjsCheckTreeVo firstLeaf : listBean){
-						if(firstLeaf.getParentId().equals(bean.getId())) {
-							firstTmp.add(firstLeaf);
-							List<ExtjsCheckTreeVo> secondTmp = new ArrayList<ExtjsCheckTreeVo>();
-							for(ExtjsCheckTreeVo secondLeaf : listBean ) {
-								if(secondLeaf.getParentId().equals(firstLeaf.getId())) {
-									secondTmp.add(secondLeaf);
-									List<ExtjsCheckTreeVo> thirdTmp = new ArrayList<ExtjsCheckTreeVo>();
-									for(ExtjsCheckTreeVo thirdLeaf : listBean) {
-										if(thirdLeaf.getParentId().equals(secondLeaf.getId())) {
-											thirdTmp.add(thirdLeaf);
-										}
-									}
-									secondLeaf.setChildren(thirdTmp);
-								}
-							}
-							firstLeaf.setChildren(secondTmp);
+			FeignResultVo R = systemRoleService.systemRolePermOperPre(roleId);
+			if(R.getSuccess()){
+				List<ExtjsCheckTreeVo>  listBean = JSONObject.parseArray(R.getData(),ExtjsCheckTreeVo.class);
+				if(listBean != null){
+					for(ExtjsCheckTreeVo bean: listBean){
+						if( "1".equals(bean.getParentId())) {
+							root.add(bean);
 						}
 					}
-					bean.setChildren(firstTmp);
+					/**
+					 * 菜单
+					 */
+					for(ExtjsCheckTreeVo bean : root ) {
+						List<ExtjsCheckTreeVo> firstTmp = new ArrayList<ExtjsCheckTreeVo>();
+						for(ExtjsCheckTreeVo firstLeaf : listBean){
+							if(firstLeaf.getParentId().equals(bean.getId())) {
+								firstTmp.add(firstLeaf);
+								List<ExtjsCheckTreeVo> secondTmp = new ArrayList<ExtjsCheckTreeVo>();
+								for(ExtjsCheckTreeVo secondLeaf : listBean ) {
+									if(secondLeaf.getParentId().equals(firstLeaf.getId())) {
+										secondTmp.add(secondLeaf);
+										List<ExtjsCheckTreeVo> thirdTmp = new ArrayList<ExtjsCheckTreeVo>();
+										for(ExtjsCheckTreeVo thirdLeaf : listBean) {
+											if(thirdLeaf.getParentId().equals(secondLeaf.getId())) {
+												thirdTmp.add(thirdLeaf);
+											}
+										}
+										secondLeaf.setChildren(thirdTmp);
+									}
+								}
+								firstLeaf.setChildren(secondTmp);
+							}
+						}
+						bean.setChildren(firstTmp);
+					}
 				}
 			}
+
 		} catch (Exception e) {
 			log.error(String.format("执行：角色管理-权限配置，异常：%s", ExceptionUtil.getExDetail(e)));
 		}
@@ -305,7 +310,12 @@ public class SystemRoleController  extends BaseController {
 					datas.add(data);
 				}
 			}
-			int eff = systemRolePermissionService.execAddSystemRolePerm(bean.getSystemRoleId(),datas);
+			FeignResultVo R = systemRolePermissionService.execAddSystemRolePerm(bean.getSystemRoleId(),datas);
+			if(!R.getSuccess()){
+				vo.setMsg(R.getMsg());
+				return vo;
+			}
+			Integer eff = JSONObject.parseObject(R.getData(),Integer.class);
 			if(eff > 0) {
 				vo.setSuccess(Boolean.TRUE);
 				vo.setMsg("");
@@ -322,25 +332,18 @@ public class SystemRoleController  extends BaseController {
 						);
 			}
 		} catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getSystemRoleId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
-
-			}
+			log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
+			systemLogService.saveLog
+					(
+							LogType.EX.getType(),
+							getLoginUser().getId(),
+							ExceptionUtil.getExDetail_log(e),
+							String.valueOf(bean.getSystemRoleId()),
+							clazzName,
+							methodName,
+							IPUtil.getInnerIpAddress(request),
+							IPUtil.getOuterIpAddress(request)
+					);
 		}
 		return vo;
     }

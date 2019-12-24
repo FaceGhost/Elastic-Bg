@@ -1,5 +1,7 @@
 package com.faceghost.elasticbg.controller;
 
+import com.alibaba.fastjson.JSONObject;
+import com.faceghost.elasticbg.base.exception.BusiException;
 import com.faceghost.elasticbg.base.model.SystemUser;
 import com.faceghost.elasticbg.base.shiro.ShiroKit;
 import com.faceghost.elasticbg.base.shiro.ShiroUser;
@@ -9,6 +11,7 @@ import com.faceghost.elasticbg.base.statics.LogType;
 import com.faceghost.elasticbg.base.utils.ExceptionUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
 import com.faceghost.elasticbg.base.vo.BaseVo;
+import com.faceghost.elasticbg.base.vo.FeignResultVo;
 import com.faceghost.elasticbg.conf.PropConf;
 import com.faceghost.elasticbg.controller.base.BaseController;
 import com.faceghost.elasticbg.service.SystemLogService;
@@ -105,7 +108,12 @@ public class LoginController extends BaseController {
 					*/
 
 					Subject user = SecurityUtils.getSubject();
-					bean = systemUserService.getSystemUserByUserName(username);
+					FeignResultVo R = systemUserService.getSystemUserByUserName(username);
+					if(R.getSuccess()){
+						bean = JSONObject.parseObject(R.getData(), SystemUser.class);
+					}else{
+						throw  new BusiException(R.getMsg());
+					}
 					//用户不存在
 					if(bean == null) {
 						throw new  UnknownAccountException();

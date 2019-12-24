@@ -1,7 +1,7 @@
 package com.faceghost.elasticbg.service;
 
 import com.faceghost.elasticbg.base.model.SystemParams;
-import com.faceghost.elasticbg.base.vo.PageVo;
+import com.faceghost.elasticbg.base.vo.FeignResultVo;
 import com.faceghost.elasticbg.base.vo.SystemParamsVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}")
+@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}/systemParams")
 public interface SystemParamsService {
 
 	/**
@@ -20,7 +20,7 @@ public interface SystemParamsService {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getMaxKeyByType",method = RequestMethod.POST)
-	Integer getMaxKeyByType(@RequestParam("type") String type) throws Exception;
+	FeignResultVo getMaxKeyByType(@RequestParam("type") String type);
 
 	/**
 	 * 自动新增某一类型的值
@@ -29,7 +29,7 @@ public interface SystemParamsService {
 	 * @return
 	 */
 	@RequestMapping(value = "/autoIncKeyByType",method = RequestMethod.POST)
-	 Integer autoIncKeyByType(@RequestParam("type") String type) throws Exception;
+	FeignResultVo autoIncKeyByType(@RequestParam("type") String type);
 
 
 	/**
@@ -38,7 +38,7 @@ public interface SystemParamsService {
 	 * @return
 	 */
 	@RequestMapping(value = "/getSystemParamsPageVo",method = RequestMethod.POST)
-	PageVo getSystemParamsPageVo(@RequestBody SystemParamsVo searchVo) throws Exception;
+	FeignResultVo getSystemParamsPageVo(@RequestBody SystemParamsVo searchVo);
 
 
 	/**
@@ -47,7 +47,7 @@ public interface SystemParamsService {
 	 * @return
 	 */
 	@RequestMapping(value = "/execAddSystemParams",method = RequestMethod.POST)
-	SystemParams execAddSystemParams(@RequestBody SystemParams bean) throws Exception;
+	FeignResultVo execAddSystemParams(@RequestBody SystemParams bean);
 
 
 	/**
@@ -56,7 +56,7 @@ public interface SystemParamsService {
 	 * @return
 	 */
 	@RequestMapping(value = "/preExecAddSystemParams",method = RequestMethod.POST)
-	SystemParamsVo preExecAddSystemParams(@RequestParam("id") Integer id) throws Exception;
+	FeignResultVo preExecAddSystemParams(@RequestParam("id") Integer id);
 	 
 
 }

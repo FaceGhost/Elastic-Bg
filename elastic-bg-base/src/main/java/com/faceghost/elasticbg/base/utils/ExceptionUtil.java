@@ -1,8 +1,5 @@
 package com.faceghost.elasticbg.base.utils;
 
-import com.faceghost.elasticbg.base.statics.ErrorMsgConst;
-import com.faceghost.elasticbg.base.vo.BaseVo;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -53,29 +50,6 @@ public class ExceptionUtil {
 			msg = msg.substring(0,250);
 		}
 		return msg;
-	}
-
-	/**
-	 * 处理RPC异常
-	 * @param e
-	 * @return
-	 */
-	public static BaseVo dealRpcError(Exception e){
-		BaseVo vo = new BaseVo();
-		vo.setSuccess(Boolean.FALSE);
-		String msg  = e.getMessage() == null ?  "" : e.getMessage();
-		/**
-		 * @see Server端 TransactionAop.java
-		 */
-		if(msg.split("@@").length == 2){
-			vo.setMsg(msg.split("@@")[1]);
-			vo.setSuccess(Boolean.TRUE);
-			return vo;
-		}else{
-			vo.setMsg(ErrorMsgConst.errSys);
-			e.printStackTrace();
-		}
-		return vo;
 	}
 
 }

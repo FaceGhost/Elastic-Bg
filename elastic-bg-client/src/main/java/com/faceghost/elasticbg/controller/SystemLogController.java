@@ -1,6 +1,8 @@
 package com.faceghost.elasticbg.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.faceghost.elasticbg.base.utils.ExceptionUtil;
+import com.faceghost.elasticbg.base.vo.FeignResultVo;
 import com.faceghost.elasticbg.base.vo.PageVo;
 import com.faceghost.elasticbg.base.vo.SystemLogVo;
 import com.faceghost.elasticbg.controller.base.BaseController;
@@ -35,7 +37,12 @@ public class SystemLogController extends BaseController {
 	public Object getSystemLogPageVo(SystemLogVo searchVo){
 		PageVo pageList = new PageVo();
 		try {
-			pageList  = systemLogService.getSystemLogPageVo(searchVo);
+			FeignResultVo R  = systemLogService.getSystemLogPageVo(searchVo);
+			if(R.getSuccess()){
+				pageList = JSONObject.parseObject(R.getData(),PageVo.class);
+			}else{
+				log.error(String.format("执行：日志管理-分页显示，异常：%s",R.getMsg()));
+			}
 		} catch (Exception e) {
 			log.error(String.format("执行：日志管理-分页显示，异常：%s",ExceptionUtil.getExDetail(e)));
 			e.printStackTrace();

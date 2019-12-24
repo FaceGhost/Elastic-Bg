@@ -21,8 +21,23 @@ eureka:
     lease-renewal-interval-in-seconds: 10 #每间隔多少s，向服务端发送一次心跳，证明自己依然”存活“
     lease-expiration-duration-in-seconds: 20 # 告诉服务端，如果我多少s之内没有给你发心跳，将我踢出掉
 feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true #使用okhttp代替httpclient
   client:
     config:
       default:
         connect-timeout: 10000 #超时设置
         read-timeout: 10000 #超时设置
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 10000 #超时设置 1000ms
+
+

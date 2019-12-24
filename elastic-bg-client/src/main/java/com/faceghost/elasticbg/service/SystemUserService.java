@@ -2,8 +2,7 @@ package com.faceghost.elasticbg.service;
 
 
 import com.faceghost.elasticbg.base.model.SystemUser;
-import com.faceghost.elasticbg.base.vo.ExtjsCheckTreeVo;
-import com.faceghost.elasticbg.base.vo.PageVo;
+import com.faceghost.elasticbg.base.vo.FeignResultVo;
 import com.faceghost.elasticbg.base.vo.SystemUserVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,9 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
-import java.util.List;
 
-@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}")
+@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}/systemUser" )
 public interface SystemUserService {
 	
 	/**
@@ -24,7 +22,7 @@ public interface SystemUserService {
 	 * @return
 	 */
 	 @RequestMapping(value = "/getSystemUserByUserName",method = RequestMethod.POST)
-	 SystemUser getSystemUserByUserName(@RequestParam("name") String name);
+	 FeignResultVo getSystemUserByUserName(@RequestParam("name") String name);
 
 	/**
 	 * 登录成功或失败更新 
@@ -36,7 +34,7 @@ public interface SystemUserService {
 	 * @return
 	 */
 	 @RequestMapping(value = "/updateByLogin",method = RequestMethod.POST)
-	 int updateByLogin(@RequestParam("username") String username,
+	 FeignResultVo updateByLogin(@RequestParam("username") String username,
                        @RequestParam("status") int status,
                        @RequestParam("retryNumber") int retryNumber,
                        @RequestParam("lastRetryTime") Date lastRetryTime);
@@ -47,7 +45,7 @@ public interface SystemUserService {
 	 * @return
 	 */
 	@RequestMapping(value = "/getSystemUserPageVo",method = RequestMethod.POST)
-	PageVo getSystemUserPageVo(@RequestBody SystemUserVo searchVo) throws Exception;
+	FeignResultVo getSystemUserPageVo(@RequestBody SystemUserVo searchVo) ;
 
 	/**
 	 * 用户管理-获取角色
@@ -56,7 +54,7 @@ public interface SystemUserService {
 	 * @return
 	 */
 	 @RequestMapping(value = "/getSystemUserRole",method = RequestMethod.POST)
-	 List<ExtjsCheckTreeVo> getSystemUserRole(@RequestParam("orgId") Integer orgId,
+	 FeignResultVo getSystemUserRole(@RequestParam("orgId") Integer orgId,
                                               @RequestParam("uid") String uid);
 
 	/**
@@ -66,8 +64,8 @@ public interface SystemUserService {
 	 * @return
 	 */
 	@RequestMapping(value = "/execAddSystemUser",method = RequestMethod.POST)
-	SystemUser execAddSystemUser(@RequestBody SystemUser bean,
-                                 @RequestParam("userRoles") String userRoles) throws Exception;
+	FeignResultVo execAddSystemUser(@RequestBody SystemUser bean,
+                                 @RequestParam("userRoles") String userRoles) ;
 
 	 /**
 	  * 用户管理-新修改用户 获取原数据
@@ -75,7 +73,7 @@ public interface SystemUserService {
 	  * @return
 	  */
 	 @RequestMapping(value = "/preExecOperSystemUser",method = RequestMethod.POST)
-	 SystemUserVo preExecOperSystemUser(@RequestParam("id") String id) throws Exception;
+	 FeignResultVo preExecOperSystemUser(@RequestParam("id") String id) ;
 
 
 	/**
@@ -84,7 +82,7 @@ public interface SystemUserService {
 	 * @return
 	 */
 	@RequestMapping(value = "/resetSystemUserPwd",method = RequestMethod.POST)
-	Boolean resetSystemUserPwd(@RequestParam("Id") String id) throws Exception;
+	FeignResultVo resetSystemUserPwd(@RequestParam("id") String id) ;
 
 
 	/**
@@ -94,6 +92,6 @@ public interface SystemUserService {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/updateBean",method = RequestMethod.POST)
-	int updateBean(@RequestBody SystemUser bean) throws  Exception;
+	FeignResultVo updateBean(@RequestBody SystemUser bean) ;
 
 }

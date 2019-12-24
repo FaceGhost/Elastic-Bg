@@ -1,17 +1,21 @@
 package com.faceghost.elasticbg.controller;
 
+import com.faceghost.elasticbg.base.exception.BusiException;
 import com.faceghost.elasticbg.base.model.SystemOrg;
+import com.faceghost.elasticbg.base.utils.ExceptionUtil;
+import com.faceghost.elasticbg.base.utils.JsonUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
-import com.faceghost.elasticbg.base.vo.ExtjsTreeVo;
-import com.faceghost.elasticbg.base.vo.PageVo;
-import com.faceghost.elasticbg.base.vo.SystemOrgVo;
+import com.faceghost.elasticbg.base.vo.*;
 import com.faceghost.elasticbg.cons.AppCons;
 import com.faceghost.elasticbg.service.SystemOrgService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
+@RequestMapping("/systemOrg")
 @RestController
 public class SystemOrgServiceController {
 
@@ -24,21 +28,29 @@ public class SystemOrgServiceController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getSystemOrgTreeVoListBean",method = RequestMethod.POST)
-	public List<ExtjsTreeVo> getSystemOrgTreeVoListBean() throws Exception{
-		List<ExtjsTreeVo>  R =   systemOrgService.getSystemOrgTreeVoListBean();
-		if(R != null && !R.isEmpty()){
-			for(ExtjsTreeVo bean : R){
-				if(ValidateUtil.validateBlank(bean.getIcon())){
-					bean.setIcon(AppCons.EXT_ICON_PREFIX + AppCons.EXT_ICON_DEFAULT);
-				}else{
-					bean.setIcon(AppCons.EXT_ICON_PREFIX + bean.getIcon());
-				}
-				if("1".equals(bean.getIsAutoExpand())){
-					bean.setExpanded(true);
-				}else{
-					bean.setExpanded(false);
+	FeignResultVo getSystemOrgTreeVoListBean(){
+		FeignResultVo R = FeignResultVo.initErr();
+		try {
+			List<ExtjsTreeVo>  data =   systemOrgService.getSystemOrgTreeVoListBean();
+			if(data != null && !data.isEmpty()){
+				for(ExtjsTreeVo bean : data){
+					if(ValidateUtil.validateBlank(bean.getIcon())){
+						bean.setIcon(AppCons.EXT_ICON_PREFIX + AppCons.EXT_ICON_DEFAULT);
+					}else{
+						bean.setIcon(AppCons.EXT_ICON_PREFIX + bean.getIcon());
+					}
+					if("1".equals(bean.getIsAutoExpand())){
+						bean.setExpanded(true);
+					}else{
+						bean.setExpanded(false);
+					}
 				}
 			}
+			R = FeignResultVo.initSuc(JsonUtil.toJSON(data));
+		}catch (BusiException e){
+			R = FeignResultVo.initErr(e.getMessage());
+		}catch (Exception e){
+			log.error(ExceptionUtil.getExDetail(e));
 		}
 		return R;
 	}
@@ -50,8 +62,17 @@ public class SystemOrgServiceController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getSystemOrgPageVo",method = RequestMethod.POST)
-	public PageVo getSystemOrgPageVo(@RequestBody SystemOrgVo searchvo) throws Exception{
-		return systemOrgService.getSystemOrgPageVo(searchvo);
+	FeignResultVo getSystemOrgPageVo(@RequestBody SystemOrgVo searchvo){
+		FeignResultVo R = FeignResultVo.initErr();
+		try {
+			PageVo data =  systemOrgService.getSystemOrgPageVo(searchvo);
+			R = FeignResultVo.initSuc(JsonUtil.toJSON(data));
+		}catch (BusiException e){
+			R = FeignResultVo.initErr(e.getMessage());
+		}catch (Exception e){
+			log.error(ExceptionUtil.getExDetail(e));
+		}
+		return R;
 	}
 
 
@@ -61,25 +82,31 @@ public class SystemOrgServiceController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getSystemOrgTreeVoForNotLow",method = RequestMethod.POST)
-	public List<ExtjsTreeVo> getSystemOrgTreeVoForNotLow() throws Exception{
-		List<ExtjsTreeVo>  R =    systemOrgService.getSystemOrgTreeVoForNotLow();
-
-		if(R != null && !R.isEmpty()){
-			for(ExtjsTreeVo bean : R){
-				if(ValidateUtil.validateBlank(bean.getIcon())){
-					bean.setIcon(AppCons.EXT_ICON_PREFIX + AppCons.EXT_ICON_DEFAULT);
-				}else{
-					bean.setIcon(AppCons.EXT_ICON_PREFIX + bean.getIcon());
-				}
-				if("1".equals(bean.getIsAutoExpand())){
-					bean.setExpanded(true);
-				}else{
-					bean.setExpanded(false);
+	FeignResultVo getSystemOrgTreeVoForNotLow() {
+		FeignResultVo R = FeignResultVo.initErr();
+		try {
+			List<ExtjsTreeVo>  data =    systemOrgService.getSystemOrgTreeVoForNotLow();
+			if(data != null && !data.isEmpty()){
+				for(ExtjsTreeVo bean : data){
+					if(ValidateUtil.validateBlank(bean.getIcon())){
+						bean.setIcon(AppCons.EXT_ICON_PREFIX + AppCons.EXT_ICON_DEFAULT);
+					}else{
+						bean.setIcon(AppCons.EXT_ICON_PREFIX + bean.getIcon());
+					}
+					if("1".equals(bean.getIsAutoExpand())){
+						bean.setExpanded(true);
+					}else{
+						bean.setExpanded(false);
+					}
 				}
 			}
+			R = FeignResultVo.initSuc(JsonUtil.toJSON(data));
+		}catch (BusiException e){
+			R = FeignResultVo.initErr(e.getMessage());
+		}catch (Exception e){
+			log.error(ExceptionUtil.getExDetail(e));
 		}
 		return R;
-
 	}
 
 
@@ -89,8 +116,17 @@ public class SystemOrgServiceController {
 	 * @return
 	 */
 	@RequestMapping(value = "/execAddSystemOrg",method = RequestMethod.POST)
-	public SystemOrg execAddSystemOrg(@RequestBody SystemOrg bean) throws Exception{
-		return systemOrgService.execAddSystemOrg(bean);
+	FeignResultVo  execAddSystemOrg(@RequestBody SystemOrg bean){
+		FeignResultVo R = FeignResultVo.initErr();
+		try {
+			SystemOrg data =  systemOrgService.execAddSystemOrg(bean);
+			R = FeignResultVo.initSuc(JsonUtil.toJSON(data));
+		}catch (BusiException e){
+			R = FeignResultVo.initErr(e.getMessage());
+		}catch (Exception e){
+			log.error(ExceptionUtil.getExDetail(e));
+		}
+		return R;
 	}
 	
 
@@ -100,8 +136,17 @@ public class SystemOrgServiceController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getPreExecAddSystemOrgData",method = RequestMethod.POST)
-	public SystemOrgVo getPreExecAddSystemOrgData(@RequestParam("id") Integer id) throws Exception{
-		return systemOrgService.getPreExecAddSystemOrgData(id);
+	FeignResultVo  getPreExecAddSystemOrgData(@RequestParam("id") Integer id) {
+		FeignResultVo R = FeignResultVo.initErr();
+		try {
+			SystemOrgVo data =  systemOrgService.getPreExecAddSystemOrgData(id);
+			R = FeignResultVo.initSuc(JsonUtil.toJSON(data));
+		}catch (BusiException e){
+			R = FeignResultVo.initErr(e.getMessage());
+		}catch (Exception e){
+			log.error(ExceptionUtil.getExDetail(e));
+		}
+		return R;
 	}
 
 }

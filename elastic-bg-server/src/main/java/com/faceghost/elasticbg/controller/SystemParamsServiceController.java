@@ -1,12 +1,19 @@
 package com.faceghost.elasticbg.controller;
 
+import com.faceghost.elasticbg.base.exception.BusiException;
 import com.faceghost.elasticbg.base.model.SystemParams;
+import com.faceghost.elasticbg.base.utils.ExceptionUtil;
+import com.faceghost.elasticbg.base.utils.JsonUtil;
+import com.faceghost.elasticbg.base.vo.FeignResultVo;
 import com.faceghost.elasticbg.base.vo.PageVo;
 import com.faceghost.elasticbg.base.vo.SystemParamsVo;
 import com.faceghost.elasticbg.service.SystemParamsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
+@RequestMapping("/systemParams")
 @RestController
 public class SystemParamsServiceController {
 
@@ -21,8 +28,17 @@ public class SystemParamsServiceController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getMaxKeyByType",method = RequestMethod.POST)
-	public Integer getMaxKeyByType(@RequestParam("type") String type) throws Exception{
-		return systemParamsService.getMaxKeyByType(type);
+	FeignResultVo getMaxKeyByType(@RequestParam("type") String type){
+		FeignResultVo R = FeignResultVo.initErr();
+		try {
+			Integer data =  systemParamsService.getMaxKeyByType(type);
+			R = FeignResultVo.initSuc(JsonUtil.toJSON(data));
+		}catch (BusiException e){
+			R = FeignResultVo.initErr(e.getMessage());
+		}catch (Exception e){
+			log.error(ExceptionUtil.getExDetail(e));
+		}
+		return R;
 	}
 
 	/**
@@ -32,8 +48,17 @@ public class SystemParamsServiceController {
 	 * @return
 	 */
 	@RequestMapping(value = "/autoIncKeyByType",method = RequestMethod.POST)
-	public Integer autoIncKeyByType(@RequestParam("type") String type) throws Exception{
-		return systemParamsService.autoIncKeyByType(type);
+	FeignResultVo autoIncKeyByType(@RequestParam("type") String type) throws Exception{
+		FeignResultVo R = FeignResultVo.initErr();
+		try {
+			Integer data =  systemParamsService.autoIncKeyByType(type);
+			R = FeignResultVo.initSuc(JsonUtil.toJSON(data));
+		}catch (BusiException e){
+			R = FeignResultVo.initErr(e.getMessage());
+		}catch (Exception e){
+			log.error(ExceptionUtil.getExDetail(e));
+		}
+		return R;
 	}
 
 
@@ -43,8 +68,18 @@ public class SystemParamsServiceController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getSystemParamsPageVo",method = RequestMethod.POST)
-	public PageVo getSystemParamsPageVo(@RequestBody SystemParamsVo searchVo) throws Exception{
-		return systemParamsService.getSystemParamsPageVo(searchVo);
+	FeignResultVo getSystemParamsPageVo(@RequestBody SystemParamsVo searchVo){
+		FeignResultVo R = FeignResultVo.initErr();
+		try {
+			PageVo data =  systemParamsService.getSystemParamsPageVo(searchVo);
+			R = FeignResultVo.initSuc(JsonUtil.toJSON(data));
+		}catch (BusiException e){
+			R = FeignResultVo.initErr(e.getMessage());
+		}catch (Exception e){
+			log.error(ExceptionUtil.getExDetail(e));
+		}
+		return R;
+
 	}
 
 
@@ -54,8 +89,17 @@ public class SystemParamsServiceController {
 	 * @return
 	 */
 	@RequestMapping(value = "/execAddSystemParams",method = RequestMethod.POST)
-	public SystemParams execAddSystemParams(@RequestBody SystemParams bean) throws Exception{
-		return systemParamsService.execAddSystemParams(bean);
+	FeignResultVo execAddSystemParams(@RequestBody SystemParams bean) {
+		FeignResultVo R = FeignResultVo.initErr();
+		try {
+			SystemParams data =  systemParamsService.execAddSystemParams(bean);
+			R = FeignResultVo.initSuc(JsonUtil.toJSON(data));
+		}catch (BusiException e){
+			R = FeignResultVo.initErr(e.getMessage());
+		}catch (Exception e){
+			log.error(ExceptionUtil.getExDetail(e));
+		}
+		return R;
 	}
 
 
@@ -65,8 +109,17 @@ public class SystemParamsServiceController {
 	 * @return
 	 */
 	@RequestMapping(value = "/preExecAddSystemParams",method = RequestMethod.POST)
-	public SystemParamsVo preExecAddSystemParams(@RequestParam("id") Integer id) throws Exception{
-		return systemParamsService.preExecAddSystemParams(id);
+	FeignResultVo  preExecAddSystemParams(@RequestParam("id") Integer id) throws Exception{
+		FeignResultVo R = FeignResultVo.initErr();
+		try {
+			SystemParamsVo data =  systemParamsService.preExecAddSystemParams(id);
+			R = FeignResultVo.initSuc(JsonUtil.toJSON(data));
+		}catch (BusiException e){
+			R = FeignResultVo.initErr(e.getMessage());
+		}catch (Exception e){
+			log.error(ExceptionUtil.getExDetail(e));
+		}
+		return R;
 	}
 	 
 

@@ -1,15 +1,13 @@
 package com.faceghost.elasticbg.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.faceghost.elasticbg.base.model.SystemOrg;
 import com.faceghost.elasticbg.base.model.SystemPermission;
 import com.faceghost.elasticbg.base.statics.ErrorMsgConst;
 import com.faceghost.elasticbg.base.statics.LogType;
 import com.faceghost.elasticbg.base.utils.ExceptionUtil;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
-import com.faceghost.elasticbg.base.vo.BaseVo;
-import com.faceghost.elasticbg.base.vo.ExtjsTreeVo;
-import com.faceghost.elasticbg.base.vo.PageVo;
-import com.faceghost.elasticbg.base.vo.SystemPermissionVo;
+import com.faceghost.elasticbg.base.vo.*;
 import com.faceghost.elasticbg.controller.base.BaseController;
 import com.faceghost.elasticbg.service.SystemLogService;
 import com.faceghost.elasticbg.service.SystemPermissionService;
@@ -50,38 +48,42 @@ public class SystemPermissionController  extends BaseController {
 	public Object getSystemUserPermission(){
 		List<ExtjsTreeVo> root = new ArrayList<ExtjsTreeVo>();
 		try {
-			List<ExtjsTreeVo> listBean = systemPermissionService.getSystemUserPermission(getLoginUser().getId());
-			if(listBean != null){
-				for(ExtjsTreeVo bean: listBean){
-					if("1".equals(bean.getParentId())) {
-						root.add(bean);
-					}
-				}
-				/**
-				 * 菜单
-				 */
-				for(ExtjsTreeVo bean : root ) {
-					List<ExtjsTreeVo> firstTmp = new ArrayList<ExtjsTreeVo>();
-					for(ExtjsTreeVo firstLeaf : listBean){
-						if(firstLeaf.getParentId().equals(bean.getId())) {
-							firstTmp.add(firstLeaf);
-							List<ExtjsTreeVo> secondTmp = new ArrayList<ExtjsTreeVo>();
-							for(ExtjsTreeVo secondLeaf : listBean ) {
-								if(secondLeaf.getParentId().equals(firstLeaf.getId())) {
-									secondTmp.add(secondLeaf);
-								}
-							}
-							firstLeaf.setChildren(secondTmp);
+			FeignResultVo R = systemPermissionService.getSystemUserPermission(getLoginUser().getId());
+			if(R.getSuccess()){
+				List<ExtjsTreeVo> listBean = JSONObject.parseArray(R.getData(),ExtjsTreeVo.class);
+				if(listBean != null){
+					for(ExtjsTreeVo bean: listBean){
+						if("1".equals(bean.getParentId())) {
+							root.add(bean);
 						}
 					}
-					bean.setChildren(firstTmp);
+					/**
+					 * 菜单
+					 */
+					for(ExtjsTreeVo bean : root ) {
+						List<ExtjsTreeVo> firstTmp = new ArrayList<ExtjsTreeVo>();
+						for(ExtjsTreeVo firstLeaf : listBean){
+							if(firstLeaf.getParentId().equals(bean.getId())) {
+								firstTmp.add(firstLeaf);
+								List<ExtjsTreeVo> secondTmp = new ArrayList<ExtjsTreeVo>();
+								for(ExtjsTreeVo secondLeaf : listBean ) {
+									if(secondLeaf.getParentId().equals(firstLeaf.getId())) {
+										secondTmp.add(secondLeaf);
+									}
+								}
+								firstLeaf.setChildren(secondTmp);
+							}
+						}
+						bean.setChildren(firstTmp);
+					}
 				}
+			}else{
+				log.error(String.format("执行：获取用户权限，异常：%s", R.getMsg()));
 			}
 		} catch (Exception e) {
 			log.error(String.format("执行：获取用户权限，异常：%s", ExceptionUtil.getExDetail(e)));
 			e.printStackTrace();
 		}
-		log.info(root.toString());
 		return root;
 	}
 
@@ -97,8 +99,12 @@ public class SystemPermissionController  extends BaseController {
 	public Object getSystemPermissionPageVo(SystemPermissionVo searchVo){
 		PageVo pageList = new PageVo();
 		try {
-			pageList = systemPermissionService.getSystemPermissionPageVo(searchVo);
-
+			FeignResultVo R = systemPermissionService.getSystemPermissionPageVo(searchVo);
+			if(R.getSuccess()){
+				pageList = JSONObject.parseObject(R.getData(),PageVo.class);
+			}else{
+				log.error(String.format("执行：权限配置-分页显示，异常：%s", R.getMsg()));
+			}
 		} catch (Exception e) {
 			log.error(String.format("执行：权限配置-分页显示，异常：%s", ExceptionUtil.getExDetail(e)));
 		}
@@ -119,39 +125,44 @@ public class SystemPermissionController  extends BaseController {
 			root.add(all);
 		}
 		try {
-			List<ExtjsTreeVo> listBean = systemPermissionService.getSystemPermissionTreeVoForNotLow();
-			if(listBean != null){
-				for(ExtjsTreeVo bean: listBean){
-					if( "0".equals(bean.getParentId())) {
-						root.add(bean);
-					}
-				}
-				/**
-				 * 菜单
-				 */
-				for(ExtjsTreeVo bean : root ) {
-					List<ExtjsTreeVo> firstTmp = new ArrayList<ExtjsTreeVo>();
-					for(ExtjsTreeVo firstLeaf : listBean){
-						if(firstLeaf.getParentId().equals(bean.getId())) {
-							firstTmp.add(firstLeaf);
-							List<ExtjsTreeVo> secondTmp = new ArrayList<ExtjsTreeVo>();
-							for(ExtjsTreeVo secondLeaf : listBean ) {
-								if(secondLeaf.getParentId().equals(firstLeaf.getId())) {
-									secondTmp.add(secondLeaf);
-									List<ExtjsTreeVo> thirdTmp = new ArrayList<ExtjsTreeVo>();
-									for(ExtjsTreeVo thirdLeft : listBean) {
-										if(thirdLeft.getParentId().equals(secondLeaf.getId())) {
-											thirdTmp.add(thirdLeft);
-										}
-									}
-									secondLeaf.setChildren(thirdTmp);
-								}
-							}
-							firstLeaf.setChildren(secondTmp);
+			FeignResultVo  R = systemPermissionService.getSystemPermissionTreeVoForNotLow();
+			if(R.getSuccess()){
+				List<ExtjsTreeVo> listBean = JSONObject.parseArray(R.getData(),ExtjsTreeVo.class);
+				if(listBean != null){
+					for(ExtjsTreeVo bean: listBean){
+						if( "0".equals(bean.getParentId())) {
+							root.add(bean);
 						}
 					}
-					bean.setChildren(firstTmp);
+					/**
+					 * 菜单
+					 */
+					for(ExtjsTreeVo bean : root ) {
+						List<ExtjsTreeVo> firstTmp = new ArrayList<ExtjsTreeVo>();
+						for(ExtjsTreeVo firstLeaf : listBean){
+							if(firstLeaf.getParentId().equals(bean.getId())) {
+								firstTmp.add(firstLeaf);
+								List<ExtjsTreeVo> secondTmp = new ArrayList<ExtjsTreeVo>();
+								for(ExtjsTreeVo secondLeaf : listBean ) {
+									if(secondLeaf.getParentId().equals(firstLeaf.getId())) {
+										secondTmp.add(secondLeaf);
+										List<ExtjsTreeVo> thirdTmp = new ArrayList<ExtjsTreeVo>();
+										for(ExtjsTreeVo thirdLeft : listBean) {
+											if(thirdLeft.getParentId().equals(secondLeaf.getId())) {
+												thirdTmp.add(thirdLeft);
+											}
+										}
+										secondLeaf.setChildren(thirdTmp);
+									}
+								}
+								firstLeaf.setChildren(secondTmp);
+							}
+						}
+						bean.setChildren(firstTmp);
+					}
 				}
+			}else{
+				log.error(String.format("执行：权限配置-分页显示搜索; 新增，添加，上层权限 树形显示，异常：:%s", R.getMsg()));
 			}
 		} catch (Exception e) {
 			log.error(String.format("执行：权限配置-分页显示搜索; 新增，添加，上层权限 树形显示，异常：:%s", ExceptionUtil.getExDetail(e)));
@@ -179,7 +190,12 @@ public class SystemPermissionController  extends BaseController {
 				vo.setMsg(ErrorMsgConst.errParam);
 				return vo;
 			}
-			SystemPermission tmp = systemPermissionService.getSystemPermssionById(bean.getPId());
+			FeignResultVo R = systemPermissionService.getSystemPermssionById(bean.getPId());
+			if(!R.getSuccess()){
+				vo.setMsg(R.getMsg());
+				return vo;
+			}
+			SystemPermission tmp = JSONObject.parseObject(R.getData(),SystemPermission.class);
 			if(tmp == null) {
 				vo.setMsg("上层权限不能不存在，请确认");
 				return vo;
@@ -203,7 +219,12 @@ public class SystemPermissionController  extends BaseController {
 			}else {
 				bean.setIsAutoExpand("0");
 			}
-			bean = systemPermissionService.execAddSystemPerm(bean);
+			FeignResultVo R2 = systemPermissionService.execAddSystemPerm(bean);
+			if(!R2.getSuccess()){
+				vo.setMsg(R2.getMsg());
+				return vo;
+			}
+			bean = JSONObject.parseObject(R2.getData(),SystemPermission.class);
 			if(bean.getId() != null) {
 				vo.setSuccess(Boolean.TRUE);
 				vo.setMsg("");
@@ -220,25 +241,19 @@ public class SystemPermissionController  extends BaseController {
 						);
 			}
 		}catch (Exception e) {
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-								String.valueOf(bean.getId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
+			log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
+			systemLogService.saveLog
+					(
+							LogType.EX.getType(),
+							getLoginUser().getId(),
+							ExceptionUtil.getExDetail_log(e),
+							String.valueOf(bean.getId()),
+							clazzName,
+							methodName,
+							IPUtil.getInnerIpAddress(request),
+							IPUtil.getOuterIpAddress(request)
+					);
 
-			}
 		}
 		return vo;
     }
@@ -265,7 +280,12 @@ public class SystemPermissionController  extends BaseController {
 				return vo;
 			}
 
-			SystemPermission tmp = systemPermissionService.getSystemPermssionById(bean.getPId());
+			FeignResultVo R = systemPermissionService.getSystemPermssionById(bean.getPId());
+			if(!R.getSuccess()){
+				vo.setMsg(R.getMsg());
+				return vo;
+			}
+			SystemPermission tmp = JSONObject.parseObject(R.getData(),SystemPermission.class);
 			if(tmp == null) {
 				vo.setMsg("上层权限不能不存在，请确认");
 				return vo;
@@ -288,7 +308,12 @@ public class SystemPermissionController  extends BaseController {
 			}else {
 				bean.setIsAutoExpand("0");
 			}
-			bean  = systemPermissionService.execAddSystemPerm(bean);
+			FeignResultVo R2  = systemPermissionService.execAddSystemPerm(bean);
+			if(!R2.getSuccess()){
+				vo.setMsg(R2.getMsg());
+				return vo;
+			}
+			bean = JSONObject.parseObject(R2.getData(),SystemPermission.class);
 			vo.setSuccess(Boolean.TRUE);
 			vo.setMsg("");
 			systemLogService.saveLog
@@ -303,26 +328,19 @@ public class SystemPermissionController  extends BaseController {
 							IPUtil.getOuterIpAddress(request)
 					);
 		}catch (Exception e) {
+			log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
+			systemLogService.saveLog
+					(
+							LogType.EX.getType(),
+							getLoginUser().getId(),
+							ExceptionUtil.getExDetail_log(e),
+							String.valueOf(bean.getId()),
+							clazzName,
+							methodName,
+							IPUtil.getInnerIpAddress(request),
+							IPUtil.getOuterIpAddress(request)
+					);
 
-			BaseVo eVo = ExceptionUtil.dealRpcError(e);
-			vo.setMsg(eVo.getMsg());
-			if(eVo.getSuccess()){
-				return vo;
-			}else{
-				log.error(String.format("执行：%s，异常：%s",operName, ExceptionUtil.getExDetail(e)));
-				systemLogService.saveLog
-						(
-								LogType.EX.getType(),
-								getLoginUser().getId(),
-								ExceptionUtil.getExDetail_log(e),
-							    String.valueOf(bean.getId()),
-								clazzName,
-								methodName,
-								IPUtil.getInnerIpAddress(request),
-								IPUtil.getOuterIpAddress(request)
-						);
-
-			}
 		}
 		return vo;
 	}
@@ -344,8 +362,12 @@ public class SystemPermissionController  extends BaseController {
 				vo.setMsg(ErrorMsgConst.errParam);
 				return vo;
 			}
-			SystemPermissionVo data = systemPermissionService.preExecAddSystemOrg(bean.getId());
-			vo.setData(data);
+			FeignResultVo R  = systemPermissionService.preExecAddSystemOrg(bean.getId());
+			if(!R.getSuccess()){
+				vo.setMsg(R.getMsg());
+				return vo;
+			}
+			vo.setData(JSONObject.parseObject(R.getData(),SystemPermissionVo.class));
 			vo.setSuccess(Boolean.TRUE);
 			vo.setMsg("");
 		}catch (Exception e) {
@@ -372,8 +394,12 @@ public class SystemPermissionController  extends BaseController {
 				vo.setMsg(ErrorMsgConst.errParam);
 				return vo;
 			}
-			List<SystemPermissionVo> data = systemPermissionService.getBeanVoByPid(pId);
-			vo.setData(data);
+			FeignResultVo  R = systemPermissionService.getBeanVoByPid(pId);
+			if(!R.getSuccess()){
+				vo.setMsg(R.getMsg());
+				return  vo;
+			}
+			vo.setData(JSONObject.parseArray(R.getData(),SystemPermissionVo.class));
 			vo.setSuccess(Boolean.TRUE);
 			vo.setMsg("");
 		}catch (Exception e) {

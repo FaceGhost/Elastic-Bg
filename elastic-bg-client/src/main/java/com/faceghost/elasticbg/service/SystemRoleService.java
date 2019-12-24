@@ -1,8 +1,7 @@
 package com.faceghost.elasticbg.service;
 
 import com.faceghost.elasticbg.base.model.SystemRole;
-import com.faceghost.elasticbg.base.vo.ExtjsCheckTreeVo;
-import com.faceghost.elasticbg.base.vo.PageVo;
+import com.faceghost.elasticbg.base.vo.FeignResultVo;
 import com.faceghost.elasticbg.base.vo.SystemRoleVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-
-@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}")
+@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}/systemRole")
 public interface SystemRoleService {
 
 	/**
@@ -21,7 +18,7 @@ public interface SystemRoleService {
 	 * @return
 	 */
 	@RequestMapping(value = "/findRolesBySystemUserId",method = RequestMethod.POST)
-	List<SystemRoleVo> findRolesBySystemUserId(@RequestParam("userId") String userId);
+	FeignResultVo findRolesBySystemUserId(@RequestParam("userId") String userId);
 
 
 	/**
@@ -31,7 +28,7 @@ public interface SystemRoleService {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/getSystemRolePageVo",method = RequestMethod.POST)
-	PageVo getSystemRolePageVo(@RequestBody SystemRoleVo searchVo) throws Exception;
+	FeignResultVo getSystemRolePageVo(@RequestBody SystemRoleVo searchVo) ;
 
 
 
@@ -41,7 +38,7 @@ public interface SystemRoleService {
 	 * @return
 	 */
 	@RequestMapping(value = "/execAddSystemRole",method = RequestMethod.POST)
-	SystemRole execAddSystemRole(@RequestBody SystemRole bean) throws Exception;
+	FeignResultVo execAddSystemRole(@RequestBody SystemRole bean) ;
 
 	
 	/**
@@ -50,7 +47,7 @@ public interface SystemRoleService {
 	 * @return
 	 */
 	@RequestMapping(value = "/getSystemRoleById",method = RequestMethod.POST)
-	SystemRole getSystemRoleById(@RequestParam("id") Integer id);
+	FeignResultVo getSystemRoleById(@RequestParam("id") Integer id);
 
 	/**
 	 * 根据ID查询
@@ -58,7 +55,7 @@ public interface SystemRoleService {
 	 * @return
 	 */
 	@RequestMapping(value = "/preExecAddSystemRole",method = RequestMethod.POST)
-	SystemRoleVo preExecAddSystemRole(@RequestParam("id") Integer id);
+	FeignResultVo preExecAddSystemRole(@RequestParam("id") Integer id);
 	
 	/**
 	 * 角色管理->权限配置
@@ -66,9 +63,7 @@ public interface SystemRoleService {
 	 * @return
 	 */
 	@RequestMapping(value = "/systemRolePermOperPre",method = RequestMethod.POST)
-	List<ExtjsCheckTreeVo> systemRolePermOperPre(@RequestParam("roleId") Integer roleId) throws Exception;
+	FeignResultVo systemRolePermOperPre(@RequestParam("roleId") Integer roleId) ;
 
-
-	
 
 }

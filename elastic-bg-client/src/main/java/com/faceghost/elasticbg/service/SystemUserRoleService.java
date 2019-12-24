@@ -1,6 +1,7 @@
 package com.faceghost.elasticbg.service;
 
 import com.faceghost.elasticbg.base.model.SystemUserRole;
+import com.faceghost.elasticbg.base.vo.FeignResultVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}")
+@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}/systemUserRole")
 public interface SystemUserRoleService {
 
 	/**
@@ -17,6 +18,6 @@ public interface SystemUserRoleService {
 	 * @return
 	 */
 	@RequestMapping(value = "/execAddSystemUseRole",method = RequestMethod.POST)
-	int execAddSystemUseRole(@RequestParam("uid") String uid, @RequestParam("datas") List<SystemUserRole> datas) throws Exception;
+	FeignResultVo execAddSystemUseRole(@RequestParam("uid") String uid, @RequestParam("datas") List<SystemUserRole> datas);
 
 }

@@ -1,6 +1,6 @@
 package com.faceghost.elasticbg.service;
 
-import com.faceghost.elasticbg.base.vo.PageVo;
+import com.faceghost.elasticbg.base.vo.FeignResultVo;
 import com.faceghost.elasticbg.base.vo.SystemLogVo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}")
+@FeignClient(name = "${elasticbg.remote.server-name}",path = "${elasticbg.remote.server-path}/systemLog")
 public interface SystemLogService {
 
 
@@ -19,7 +19,7 @@ public interface SystemLogService {
 	 * @return
 	 */
 	@RequestMapping(value = "/getSystemLogPageVo",method = RequestMethod.POST)
-	PageVo getSystemLogPageVo(@RequestBody SystemLogVo searchvo) throws Exception;
+	FeignResultVo getSystemLogPageVo(@RequestBody SystemLogVo searchvo) ;
 
 
 	/**
@@ -35,7 +35,7 @@ public interface SystemLogService {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/saveLog",method = RequestMethod.POST)
-	int saveLog(@RequestParam("logType") String logType,
+	FeignResultVo saveLog(@RequestParam("logType") String logType,
                 @RequestParam("uId") String uId,
                 @RequestParam("oper") String oper,
                 @RequestParam("refId") String refId,
