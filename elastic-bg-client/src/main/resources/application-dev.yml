@@ -4,7 +4,7 @@ elasticbg:
   session-invalidate-time: 1800 #session失效时间 单位：秒
   session-validation-interval: 900 #多久检测一次失效的session 单位：秒
   login-max-retryNumber: 5 #登录尝试失败N次数后冻结账户,0永不冻结
-  login-ID-maxSession: 0 #同一账号允许同时在线数量,0不限
+  login-ID-maxSession: 1 #同一账号允许同时在线数量,0不限
   remote:
     server-name: elasticBg-server #@FeignClient name值，server端：spring.application.name
     server-path: /elasticBg-server #@FeignClient path值，server端：server.servlet.context-path

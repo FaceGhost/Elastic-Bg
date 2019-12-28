@@ -242,4 +242,10 @@ Ext.onReady(function() {
 
     Ext.defer(hideMask, 250);
 
+    /**
+	 * welcome iframe height
+     */
+	var  welcomeIframe =document.getElementById('iframe_main');
+	welcomeIframe.height=document.getElementById("body").offsetHeight-100;
+
 });

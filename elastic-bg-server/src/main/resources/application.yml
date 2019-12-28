@@ -5,6 +5,9 @@ spring:
     view:
       suffix: .jsp
       prefix: /WEB-INF/ui/
+  devtools:
+    restart:
+      poll-interval: 5000ms
 
 mybatis: #mybatis
   mapper-locations: mapper/*.xml

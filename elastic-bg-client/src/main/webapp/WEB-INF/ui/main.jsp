@@ -78,10 +78,6 @@
 			}
 		});
 		var base = '${base}';
-        window.onload = function(){
-            var  welcomeIframe =document.getElementById('iframe_main');
-            welcomeIframe.height=document.getElementById("body").offsetHeight-100;
-		}
 
 	</script>
 	<script type="text/javascript">document.getElementById('loading-msg').innerHTML = 'Loading 初始化 ...';</script>

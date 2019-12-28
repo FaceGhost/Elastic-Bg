@@ -3,6 +3,9 @@ spring:
     active: dev #环境
   application:
     name: elasticBg-client
+  devtools:
+    restart:
+      poll-interval: 5000ms
   mvc:
     view:
       suffix: .jsp

@@ -3,3 +3,6 @@ spring:
     active: dev
   application:
     name: elasticBg-eureka
+  devtools:
+    restart:
+      poll-interval: 5000ms
