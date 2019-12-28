@@ -26,6 +26,7 @@ PS:演示系统(v1.0.0)为只读模式，同一账号最对允许20人同时访�
 <p class="line">
     <h3>相关文章</h3>
     <a target="_blank" href="https://faceghost.com/article/478001">IDEA本地运行Elastic-Bg框架</a>
+<a target="_blank" href="https://faceghost.com/article/559031">本地环境运行Elastic-Bg SpringCloud版</a>
 </p>
 
 <p class="line">
