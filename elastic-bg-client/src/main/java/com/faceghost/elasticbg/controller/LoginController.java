@@ -127,7 +127,7 @@ public class LoginController extends BaseController {
 						return vo;
 					}
 
-					if(bean.getRetryNumber() <= 0){
+					if(bean.getRetryNumber() != null && bean.getRetryNumber() <= 0){
 						retryNumber = 1;
 					}else{
 						retryNumber = bean.getRetryNumber() + 1;

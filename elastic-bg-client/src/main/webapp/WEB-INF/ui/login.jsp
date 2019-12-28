@@ -121,7 +121,7 @@
 				  <input ing="false" type="button" name="submit_btn"  class="login_input submit_btn"  value="确定"/>
 			  </div>
 			  <div class="login_bot">
-				  演示系统&nbsp;<a target="_blank" href="https://faceghost.com">见鬼网</a>&nbsp;提供，技术服务请关注公众号：见鬼网
+				  演示系统&nbsp;<a target="_blank" href="https://faceghost.com">Fg社区</a>&nbsp;提供，技术服务请关注公众号：Fg社区
 			  </div>
 		  </form>
 	  </div>

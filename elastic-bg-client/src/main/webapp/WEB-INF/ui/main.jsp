@@ -8,7 +8,7 @@
 <!DOCTYPE html >
 <html>
   <head>
-  <title>Elastic-Bg通用后台管理系统</title>
+  <title>Elastic-Bg通用后台管理系统 Grpc版</title>
   <meta charset="utf-8" />
   <style>
 	    #loading-mask{ background-color:white;height:100%;position:absolute;left:0;top:0;width:100%;z-index:20000;}
@@ -27,7 +27,7 @@
 		.layout_bottom_div {color: #6699CC;padding-right: 10px;padding-top: 1px;text-align: center;width: 100%;position: absolute;right: 0px;top: 0px;}
   </style>
   </head>
-  <body>
+  <body id="body">
 	 	 <div id="loading-mask" style=""></div>
 		 <div id="loading">
 	        <div class="loading-indicator">
@@ -36,8 +36,9 @@
 	        </div>
 	     </div>
 		 <div id="div_center">
-			<iframe id="iframe_main" src="welcome.html" width="100%" height="100%" style="min-height:500px;" frameborder="0" ></iframe>
-		</div>
+			 <iframe id="iframe_main" name="iframe_main" src="${base}welcome.htm"  style="padding: 0px; width: 100%; " frameborder="0" ></iframe>
+
+		 </div>
 		
 			<div id="layout_top_div" class="layout_top_div" >
 				<div style="width: 100%;">
