@@ -13,26 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface SystemParamsService {
 
 	/**
-	 * 查询某一类型的最大值
-	 * 
-	 * @param type
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "/getMaxKeyByType",method = RequestMethod.POST)
-	FeignResultVo getMaxKeyByType(@RequestParam("type") String type);
-
-	/**
-	 * 自动新增某一类型的值
-	 * 
-	 * @param type
-	 * @return
-	 */
-	@RequestMapping(value = "/autoIncKeyByType",method = RequestMethod.POST)
-	FeignResultVo autoIncKeyByType(@RequestParam("type") String type);
-
-
-	/**
 	 * 系统参数管理-分页显示
 	 * @param
 	 * @return

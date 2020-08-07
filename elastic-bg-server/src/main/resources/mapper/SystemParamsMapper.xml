@@ -18,16 +18,6 @@
   </sql>
   <!-- auto -->
 
-  <!-- 查询某一类型的最大值 -->
-  <select id="getMaxKeyByType" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select value from system_params where type='sequence' and  param = #{type}
-  </select>
-
-  <!-- 自动新增某一类型的值 -->
-  <update id="autoIncKeyByType" parameterType="java.lang.String" >
-    update system_params  set value = cast(value as SIGNED INTEGER) + 1 where type='sequence' and  param = #{type}
-  </update>
-
   <!-- 系统参数管理-分页显示-->
   <select id="getSystemParamsPageVo" resultType="com.faceghost.elasticbg.base.vo.SystemParamsVo" parameterType="map" >
     SELECT

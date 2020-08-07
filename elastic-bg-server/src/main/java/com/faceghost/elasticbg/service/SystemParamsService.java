@@ -1,6 +1,5 @@
 package com.faceghost.elasticbg.service;
 
-import com.faceghost.elasticbg.base.exception.BusiException;
 import com.faceghost.elasticbg.base.exception.RootException;
 import com.faceghost.elasticbg.base.model.SystemParams;
 import com.faceghost.elasticbg.base.utils.ValidateUtil;
@@ -16,6 +15,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -26,33 +26,32 @@ public class SystemParamsService  {
 
 	/**
 	 * 查询某一类型的最大值
-	 * 
 	 * @param type
+	 * @param machine
 	 * @return
-	 * @throws RootException
+	 * @throws Exception
 	 */
-	public Integer getMaxKeyByType(String type) throws Exception {
-		if (ValidateUtil.validateBlank(type))
-			throw new RootException("查询某一类型的最大值时，类型为空");
-		SystemParams key = systemParamsMapper.getMaxKeyByType(type);
-		if (key == null) {
-			throw new BusiException("类型[" + type + "]的值为空");
-		} else {
-			return Integer.valueOf(key.getValue());
+	public Long getMaxKeyByType(String type, String machine) throws Exception {
+		if(ValidateUtil.validateBlank(type)) throw new RootException("查询某一类型的最大值时，类型为空");
+		Long value = systemParamsMapper.getValueByTypeAndMachine(type, machine);
+		if(Objects.isNull(value)){
+			throw new RootException(String.format("查询type[%s],machine[%s]为空", type, machine));
+		}else{
+			return value;
 		}
 	}
 
 	/**
-	 * 自动新增某一类型的值
-	 * 
+	 *  自动新增某一类型的值
 	 * @param type
+	 * @param machine
+	 * @param oldValue
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor =  Exception.class)
-	public Integer autoIncKeyByType(String type) {
-		return systemParamsMapper.autoIncKeyByType(type);
+	public Integer autoIncKeyByType(String type, String machine, Long oldValue) {
+		return systemParamsMapper.autoIncKeyByType(type, machine, oldValue);
 	}
-
 	/**
 	 * 系统参数管理-分页显示
 	 * @param searchVo

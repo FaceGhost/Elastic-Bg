@@ -57,8 +57,8 @@ public class SequenceServiceStatic implements InitializingBean{
 	 * @param type
 	 * @return
 	 */
-	public static Integer getMaxKeyByType(String type) throws Exception{
-		return systemParamsService.getMaxKeyByType(type);
+	public static Long getMaxKeyByType(String type) throws Exception{
+		return systemParamsService.getMaxKeyByType(type, getMachine());
 	}
 
 	/**
@@ -68,17 +68,15 @@ public class SequenceServiceStatic implements InitializingBean{
 	 */
 	public static String createSystemUserId()throws Exception{
 		StringBuffer  id =  new StringBuffer();
-		synchronized (SEQ_SYSTEM_USER_ID) {
-			Integer max = getMaxKeyByType(SEQ_SYSTEM_USER_ID)+1;
-			id.append(RandomKeyUtil.getRandomDigitStrNotZero(SEQ_SYSTEM_USER_ID_LEN));
-			id.append(max);
-			id.append(getMachine());
-			int count = systemParamsService.autoIncKeyByType(SEQ_SYSTEM_USER_ID);
-			if(count <= 0){
-				String err  = "after get Key cannot autoIncrement";
-				log.error(err);
-				throw new BusiException(err);
-			}
+		Long max = getMaxKeyByType(SEQ_SYSTEM_USER_ID);
+		id.append(RandomKeyUtil.getRandomDigitStrNotZero(SEQ_SYSTEM_USER_ID_LEN));
+		id.append(max + 1);
+		id.append(getMachine());
+		int count = systemParamsService.autoIncKeyByType(SEQ_SYSTEM_USER_ID, getMachine(), max);
+		if(count <= 0){
+			String err  = "after get Key cannot autoIncrement";
+			log.error(err);
+			throw new BusiException(err);
 		}
 		return id.toString();
 	}
