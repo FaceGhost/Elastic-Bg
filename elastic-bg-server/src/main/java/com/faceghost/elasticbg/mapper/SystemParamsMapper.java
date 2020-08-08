@@ -13,22 +13,20 @@ public interface SystemParamsMapper extends BaseMapper<SystemParams> {
 
     /**
      * 查询某一类型的最大值
-     * @param type
-     * @param machine
+     * @param param
      * @return
      */
-    @Select({"select value from qa_no where type = #{type} and machine = #{machine}"})
-    Long getValueByTypeAndMachine(@Param("type") String type, @Param("machine") String machine);
+    @Select({"select value from system_params where param = #{param}"})
+    Long getValueByParam(@Param("param") String param);
 
     /**
      * 自动新增某一类型的值
-     * @param type
-     * @param machine
+     * @param param
      * @param oldValue
      * @return
      */
-    @Update({"update qa_no set value = value + 1 where type = #{type} and machine = #{machine} and value = #{oldValue}"})
-    Integer autoIncKeyByType(@Param("type")String type,@Param("machine") String machine,@Param("oldValue") Long oldValue);
+    @Update({"update system_params set value = value + 1 where param = #{param} and value = #{oldValue}"})
+    Integer autoIncKeyByParamAndOldValue(@Param("param")String param,@Param("oldValue") Long oldValue);
 
 
     /**

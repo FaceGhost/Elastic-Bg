@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 用户管理
@@ -77,7 +78,8 @@ public class SystemUserController  extends BaseController {
 			if(orgId == null && userId == null) {
 				return root;
 			}
-			return systemUserService.getSystemUserRole(orgId,userId);
+			FeignResultVo resultVo =  systemUserService.getSystemUserRole(orgId,userId);
+			if (Objects.nonNull(resultVo)) return resultVo.getData();
 		} catch (Exception e) {
 			log.error(String.format("执行：用户管理-获取角色，异常：%s", ExceptionUtil.getExDetail(e)));
 		}

@@ -26,16 +26,16 @@ public class SystemParamsService  {
 
 	/**
 	 * 查询某一类型的最大值
-	 * @param type
+	 * @param param
 	 * @param machine
 	 * @return
 	 * @throws Exception
 	 */
-	public Long getMaxKeyByType(String type, String machine) throws Exception {
-		if(ValidateUtil.validateBlank(type)) throw new RootException("查询某一类型的最大值时，类型为空");
-		Long value = systemParamsMapper.getValueByTypeAndMachine(type, machine);
+	public Long getMaxKeyByParam(String param, String machine) throws Exception {
+		if(ValidateUtil.validateBlank(param)) throw new RootException("查询某一类型的最大值时，类型为空");
+		Long value = systemParamsMapper.getValueByParam(param);
 		if(Objects.isNull(value)){
-			throw new RootException(String.format("查询type[%s],machine[%s]为空", type, machine));
+			throw new RootException(String.format("查询type[%s],machine[%s]为空", param, machine));
 		}else{
 			return value;
 		}
@@ -43,14 +43,14 @@ public class SystemParamsService  {
 
 	/**
 	 *  自动新增某一类型的值
-	 * @param type
+	 * @param param
 	 * @param machine
 	 * @param oldValue
 	 * @return
 	 */
 	@Transactional(propagation = Propagation.REQUIRES_NEW , rollbackFor =  Exception.class)
-	public Integer autoIncKeyByType(String type, String machine, Long oldValue) {
-		return systemParamsMapper.autoIncKeyByType(type, machine, oldValue);
+	public Integer autoIncKeyByParam(String param, String machine, Long oldValue) {
+		return systemParamsMapper.autoIncKeyByParamAndOldValue(param, oldValue);
 	}
 	/**
 	 * 系统参数管理-分页显示

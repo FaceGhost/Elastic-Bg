@@ -54,11 +54,11 @@ public class SequenceServiceStatic implements InitializingBean{
 	
 	/**
 	 * 查询type的最大值
-	 * @param type
+	 * @param param
 	 * @return
 	 */
-	public static Long getMaxKeyByType(String type) throws Exception{
-		return systemParamsService.getMaxKeyByType(type, getMachine());
+	public static Long getMaxKeyByParam(String param) throws Exception{
+		return systemParamsService.getMaxKeyByParam(param, getMachine());
 	}
 
 	/**
@@ -68,11 +68,11 @@ public class SequenceServiceStatic implements InitializingBean{
 	 */
 	public static String createSystemUserId()throws Exception{
 		StringBuffer  id =  new StringBuffer();
-		Long max = getMaxKeyByType(SEQ_SYSTEM_USER_ID);
+		Long max = getMaxKeyByParam(SEQ_SYSTEM_USER_ID);
 		id.append(RandomKeyUtil.getRandomDigitStrNotZero(SEQ_SYSTEM_USER_ID_LEN));
 		id.append(max + 1);
 		id.append(getMachine());
-		int count = systemParamsService.autoIncKeyByType(SEQ_SYSTEM_USER_ID, getMachine(), max);
+		int count = systemParamsService.autoIncKeyByParam(SEQ_SYSTEM_USER_ID, getMachine(), max);
 		if(count <= 0){
 			String err  = "after get Key cannot autoIncrement";
 			log.error(err);
